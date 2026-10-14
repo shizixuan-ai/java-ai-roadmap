@@ -20,7 +20,7 @@ AgentScope Java 需要 JDK 17 及以上版本，构建工具推荐 Maven 3.9+。
 </dependency>
 ```
 
-<font style="color:rgb(15, 17, 21);">如果只需要裸 ReActAgent 的框架 API（不需要工作区/持久化/子 agent/沙箱），</font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">agentscope-core</font>`<font style="color:rgb(15, 17, 21);"> 足够提供 agent 本身。特定模型提供商的 Chat Model 与 formatter 位于独立的 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">agentscope-extensions-model-*</font>`<font style="color:rgb(15, 17, 21);"> 模型扩展模块中</font><font style="color:rgb(15, 17, 21);">。</font>
+<font style="color:rgb(15, 17, 21);">如果只需要裸 ReActAgent 的框架 API（不需要工作区/持久化/子 agent/沙箱），</font><font style="color:rgb(15, 17, 21);"> 足够提供 agent 本身。特定模型提供商的 Chat Model 与 formatter 位于独立的 </font><font style="color:rgb(15, 17, 21);"> 模型扩展模块中</font><font style="color:rgb(15, 17, 21);">。</font>
 
 <font style="color:rgb(15, 17, 21);">HarnessAgent 快速示例：</font>
 
@@ -138,7 +138,7 @@ sequenceDiagram
 2. **<font style="color:rgb(15, 17, 21);">前端 EventSource 接收</font>**<font style="color:rgb(15, 17, 21);">：逐字追加 DOM。</font>
 3. **<font style="color:rgb(15, 17, 21);">测试方式</font>**<font style="color:rgb(15, 17, 21);">：浏览器直接访问或 Apifox/Postman 使用 SSE 调试。</font>
 4. **<font style="color:rgb(15, 17, 21);">常见坑</font>**<font style="color:rgb(15, 17, 21);">：</font>
-    - <font style="color:rgb(15, 17, 21);">大模型调用未开启 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">incrementalOutput(true)</font>`<font style="color:rgb(15, 17, 21);">（核心。不开启的话，大模型还是会一次性返回）</font>
+    - <font style="color:rgb(15, 17, 21);">大模型调用未开启 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">incrementalOutput(true)</font><font style="color:rgb(15, 17, 21);">（核心。不开启的话，大模型还是会一次性返回）</font>
     - <font style="color:rgb(15, 17, 21);">返回类型未写 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">produces = MediaType.TEXT_EVENT_STREAM_VALUE</font>`
     - <font style="color:rgb(15, 17, 21);">前端跨域</font>
     - <font style="color:rgb(15, 17, 21);">超时时间太短</font>

@@ -65,15 +65,6 @@ flowchart TB
 
 <font style="color:rgb(15, 17, 21);">后续所有技术，都是为了补这三个缺陷。</font>
 
-<!-- 这是一个文本绘图，源码为：flowchart LR -->
-    A[LLM 三大缺陷] --> B[幻觉]
-    A --> C[知识截止]
-    A --> D[无执行能力]
-    B --> E[RAG]
-    C --> E
-    D --> F[Function Calling / Tool Calling]
-    F --> G[Agent]
-    E --> G -->
 ![LLM 三大缺陷](pic/img.png)
 
 ---
