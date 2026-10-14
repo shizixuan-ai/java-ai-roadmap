@@ -74,7 +74,7 @@ flowchart TB
     D --> F[Function Calling / Tool Calling]
     F --> G[Agent]
     E --> G -->
-![](https://cdn.nlark.com/yuque/__mermaid_v3/bbcffc86fb44ed565c9eba615370f429.svg)
+![LLM 三大缺陷](pic/img.png)
 
 ---
 
