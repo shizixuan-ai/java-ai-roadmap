@@ -16,23 +16,10 @@ RAG 知识库问答 = 开卷考试，先给 AI 发参考资料，要求它只能
 ---
 
 ## 2. RAG 全流程
-<!-- 这是一个文本绘图，源码为：flowchart TB
-    subgraph 离线预处理
-        A[原始 PDF/Word/Excel] --> B[文件解析]
-        B --> C[文档清洗降噪]
-        C --> D[文本分段切片]
-        D --> E[向量化 Embedding]
-        E --> F[向量入库 Milvus/ES/Redis]
-    end
-    subgraph 在线处理
-        G[用户提问] --> H[查询改写]
-        H --> I[混合检索]
-        I --> J[重排序 Rerank]
-        J --> K[Prompt 拼接]
-        K --> L[LLM 生成]
-        L --> M[返回答案]
-    end -->
-![](https://cdn.nlark.com/yuque/__mermaid_v3/b8b58c6ce98d7deafa58c9f8732d8e0b.svg)
+<!-- 这是一个文本绘图，源码为：flowchart TB -->
+
+![在线处理](pic/img_1.png)
+![离线处理](pic/img_2.png)
 
 <font style="color:rgb(15, 17, 21);">Java 后端逐行对应：</font>
 
@@ -60,13 +47,8 @@ RAG 知识库问答 = 开卷考试，先给 AI 发参考资料，要求它只能
 <font style="color:rgb(15, 17, 21);">踩坑提醒：老格式 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">.doc/.xls</font>`<font style="color:rgb(15, 17, 21);"> 兼容性差，建议统一转 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">.docx/.xlsx</font>`<font style="color:rgb(15, 17, 21);">。</font>
 
 ### <font style="color:rgb(15, 17, 21);">3.2 企业级 RAG 离线预处理流程</font>
-<!-- 这是一个文本绘图，源码为：flowchart LR
-    A[原始 PDF/Word] --> B[文件解析]
-    B --> C[文档清洗降噪]
-    C --> D[文本分段切片]
-    D --> E[向量化]
-    E --> F[向量入库] -->
-![](https://cdn.nlark.com/yuque/__mermaid_v3/eeed4b01be2e04c580ac596a73af1248.svg)
+<!-- 这是一个文本绘图，源码为：flowchart LR -->
+![文件解析](pic/img_3.png)
 
 <font style="color:rgb(15, 17, 21);">清洗是承上启下的核心环节，低成本、高收益。
 </font><font style="color:rgb(15, 17, 21);">70% 的 RAG 召回准确率低下问题，根源不在 Milvus、不在 Embedding 模型，而是原始文档混入大量无效噪声。</font>
@@ -364,12 +346,7 @@ public class ParentChildSplitter {
 
 
 ### <font style="color:rgb(15, 17, 21);">5.1 决策树</font>
-<!-- 这是一个文本绘图，源码为：flowchart TD
-    A[项目阶段?] --> B{数据量}
-    B -->|<10万| C[优先 Redis 向量]
-    B -->|已有 ES + 混合检索| D[ES 向量]
-    B -->|>100万 生产级 RAG/多租户| E[Milvus] -->
-![](https://cdn.nlark.com/yuque/__mermaid_v3/cbd2d87e94c62c9278c41732b14ac4d8.svg)
+![决策树](pic/img_4.png)
 
 > <font style="color:rgb(15, 17, 21);">避坑提醒：不要为了「技术先进」盲目上 Milvus。十万级数据用 Redis 完全够用，运维成本差一个数量级。</font>
 >
@@ -428,7 +405,7 @@ public EmbeddingStore<TextSegment> embeddingStore() {
 }
 ```
 
-<font style="color:rgb(15, 17, 21);">划重点：</font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">dimension</font>`<font style="color:rgb(15, 17, 21);"> 参数是 90% 的人踩坑的地方，必须和嵌入模型输出维度完全一样，差一位都会直接报错创建集合失败。</font>
+<font style="color:rgb(15, 17, 21);">划重点：</font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">dimension</font><font style="color:rgb(15, 17, 21);"> 参数是 90% 的人踩坑的地方，必须和嵌入模型输出维度完全一样，差一位都会直接报错创建集合失败。</font>
 
 ### <font style="color:rgb(15, 17, 21);">6.6 可视化管理工具 Attu</font>
 <font style="color:rgb(15, 17, 21);">Attu 是 Milvus 官方开源的一体化管理工具，提供直观的图形用户界面（GUI），可以轻松与数据库交互[reference:6]。和 MySQL 有 Navicat 一样，Attu 方便查看集合、查数据、管理索引。</font>
@@ -451,7 +428,7 @@ public EmbeddingStore<TextSegment> embeddingStore() {
 docker run -p 8000:3000 -e MILVUS_URL=127.0.0.1:19530 zilliz/attu:v2.3.0
 ```
 
-<font style="color:rgb(15, 17, 21);">启动后访问 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">http://localhost:8000</font>`<font style="color:rgb(15, 17, 21);"> 即可可视化管理 Milvus</font><font style="color:rgb(15, 17, 21);">。</font>
+<font style="color:rgb(15, 17, 21);">启动后访问 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">http://localhost:8000</font><font style="color:rgb(15, 17, 21);"> 即可可视化管理 Milvus</font><font style="color:rgb(15, 17, 21);">。</font>
 
 **<font style="color:rgb(15, 17, 21);">与 Milvus 一起用 Docker Compose 部署</font>**<font style="color:rgb(15, 17, 21);">：</font>
 
@@ -520,22 +497,11 @@ services:
 </font><font style="color:rgb(15, 17, 21);">真正靠谱方案：</font>**<font style="color:rgb(15, 17, 21);">Redis + MySQL 混合存储</font>**<font style="color:rgb(15, 17, 21);">。</font>
 
 ### <font style="color:rgb(15, 17, 21);">8.1 架构图</font>
-<!-- 这是一个文本绘图，源码为：flowchart TB
-    A[用户提问] --> B[查询 Redis 热会话]
-    B -->|命中| C[直接拼接上下文]
-    B -->|未命中| D[查询 MySQL 历史消息]
-    D --> E[回填 Redis]
-    C --> F[调用大模型]
-    E --> F
-    F --> G[返回 AI 回答]
-    G --> H[异步保存消息到 MySQL]
-    H --> I[定时任务清理过期会话与失败消息]
-	 -->
-![](https://cdn.nlark.com/yuque/__mermaid_v3/c7df3afb4d685a2fea58dbb1d445de58.svg)
+![查询 Redis 热会话](pic/img_5.png)
 
 ### <font style="color:rgb(15, 17, 21);">8.2 核心表</font>
-+ `<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">chat_session</font>`<font style="color:rgb(15, 17, 21);">：会话表</font>
-+ `<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">chat_message</font>`<font style="color:rgb(15, 17, 21);">：消息明细表</font>
++ <font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">chat_session</font><font style="color:rgb(15, 17, 21);">：会话表</font>
++ <font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">chat_message</font><font style="color:rgb(15, 17, 21);">：消息明细表</font>
 
 ### <font style="color:rgb(15, 17, 21);">8.3 生产问题</font>
 + <font style="color:rgb(15, 17, 21);">Redis 和 MySQL 数据不一致</font>

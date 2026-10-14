@@ -13,13 +13,7 @@ AI 接口高可用 3 个核心难点：
 
 三层防护架构：
 
-<!-- 这是一个文本绘图，源码为：flowchart LR
-    A[流量入口] --> B[限流]
-    B --> C[降级]
-    C --> D[熔断]
-    D --> E[大模型服务]
- -->
-![](https://cdn.nlark.com/yuque/__mermaid_v3/4d9e0623f9884650ad22b18b7f46b86a.svg)
+![三层防护](pic/img_6.png)
 
 ### <font style="color:rgb(15, 17, 21);">1.1 限流</font>
 + <font style="color:rgb(15, 17, 21);">QPS 限流 + 并发线程数限流双重防护</font>
@@ -354,8 +348,8 @@ private ChatMessage cacheMessage(String sessionId, String content, MessageType t
 
 **<font style="color:rgb(15, 17, 21);">注意事项</font>**
 
-1. <font style="color:rgb(15, 17, 21);">必须设置事件 id：只有 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">SseEmitter.event().id(...)</font>`<font style="color:rgb(15, 17, 21);"> 设置了 id，浏览器才会在重连时发送 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">Last-Event-ID</font>`<font style="color:rgb(15, 17, 21);"> 头。</font>
-2. <font style="color:rgb(15, 17, 21);">不要手动关闭 EventSource：在 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">onerror</font>`<font style="color:rgb(15, 17, 21);"> 中调用 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">evtSource.close()</font>`<font style="color:rgb(15, 17, 21);"> 会阻止浏览器自动重连。</font>
+1. <font style="color:rgb(15, 17, 21);">必须设置事件 id：只有 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">SseEmitter.event().id(...)</font><font style="color:rgb(15, 17, 21);"> 设置了 id，浏览器才会在重连时发送 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">Last-Event-ID</font><font style="color:rgb(15, 17, 21);"> 头。</font>
+2. <font style="color:rgb(15, 17, 21);">不要手动关闭 EventSource：在 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">onerror</font><font style="color:rgb(15, 17, 21);"> 中调用 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">evtSource.close()</font><font style="color:rgb(15, 17, 21);"> 会阻止浏览器自动重连。</font>
 3. <font style="color:rgb(15, 17, 21);">服务端必须缓存已发送消息：内存或 Redis，给每条消息分配递增序号。</font>
 4. <font style="color:rgb(15, 17, 21);">缓存容量必须设上限：防止长时间会话导致内存溢出。</font>
 5. <font style="color:rgb(15, 17, 21);">断点续传后继续生成：如果回答未生成完，服务端应继续生成剩余内容并推送新事件。</font>
@@ -804,7 +798,7 @@ try {
 ### <font style="color:rgb(15, 17, 21);">7.1 记忆错乱</font>
 + <font style="color:rgb(15, 17, 21);">现象：A 用户看到 B 用户政策，新会话记得上个用户隐私</font>
 + <font style="color:rgb(15, 17, 21);">根因：向量召回没加租户隔离；sessionId 生成有 bug；没有相关性阈值过滤</font>
-+ <font style="color:rgb(15, 17, 21);">解决：向量召回强制带 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">tenant_id + user_id</font>`<font style="color:rgb(15, 17, 21);">；sessionId 和用户绑定；相关性阈值过滤</font>
++ <font style="color:rgb(15, 17, 21);">解决：向量召回强制带 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">tenant_id + user_id</font><font style="color:rgb(15, 17, 21);">；sessionId 和用户绑定；相关性阈值过滤</font>
 
 ### <font style="color:rgb(15, 17, 21);">7.2 任务死循环</font>
 + <font style="color:rgb(15, 17, 21);">现象：Agent 卡住不动，token 疯狂消耗</font>

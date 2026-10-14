@@ -139,7 +139,7 @@ sequenceDiagram
 3. **<font style="color:rgb(15, 17, 21);">测试方式</font>**<font style="color:rgb(15, 17, 21);">：浏览器直接访问或 Apifox/Postman 使用 SSE 调试。</font>
 4. **<font style="color:rgb(15, 17, 21);">常见坑</font>**<font style="color:rgb(15, 17, 21);">：</font>
     - <font style="color:rgb(15, 17, 21);">大模型调用未开启 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">incrementalOutput(true)</font><font style="color:rgb(15, 17, 21);">（核心。不开启的话，大模型还是会一次性返回）</font>
-    - <font style="color:rgb(15, 17, 21);">返回类型未写 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">produces = MediaType.TEXT_EVENT_STREAM_VALUE</font>`
+    - <font style="color:rgb(15, 17, 21);">返回类型未写 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">produces = MediaType.TEXT_EVENT_STREAM_VALUE</font>
     - <font style="color:rgb(15, 17, 21);">前端跨域</font>
     - <font style="color:rgb(15, 17, 21);">超时时间太短</font>
 5. **<font style="color:rgb(15, 17, 21);">真实项目还要考虑</font>**<font style="color:rgb(15, 17, 21);">：</font>

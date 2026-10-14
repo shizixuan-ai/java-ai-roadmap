@@ -13,12 +13,7 @@
 + 防责任不清
 
 ### 1.1 生产级 AI 网关 5 层设计
-<!-- 这是一个文本绘图，源码为：flowchart TB
-    A[接入层] --> B[鉴权层]
-    B --> C[限流层]
-    C --> D[配额层]
-    D --> E[审计层] -->
-![](https://cdn.nlark.com/yuque/__mermaid_v3/d15238628a5c76e81ffc4e6c0deef306.svg)
+![AI 网关 5 层设计](pic/img_7.png)
 
 ### <font style="color:rgb(15, 17, 21);">1.2 鉴权方式</font>
 + **<font style="color:rgb(15, 17, 21);">AK/SK 签名</font>**<font style="color:rgb(15, 17, 21);">：适合服务端调用、第三方系统接入</font>
@@ -312,7 +307,7 @@ public class OperationLogAspect {
 <font style="color:rgb(15, 17, 21);">推荐：绝大多数企业内部知识库，基于 Milvus 标量过滤最优。</font>
 
 ### <font style="color:rgb(15, 17, 21);">3.2 生产落地三步</font>
-1. <font style="color:rgb(15, 17, 21);">文档入库注入权限元数据：</font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">deptId</font>`<font style="color:rgb(15, 17, 21);">、</font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">permissionLevel</font>`<font style="color:rgb(15, 17, 21);">、</font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">ownerId</font>`
+1. <font style="color:rgb(15, 17, 21);">文档入库注入权限元数据：</font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">deptId</font><font style="color:rgb(15, 17, 21);">、</font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">permissionLevel</font>`<font style="color:rgb(15, 17, 21);">、</font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">ownerId</font>
 2. <font style="color:rgb(15, 17, 21);">检索环节增加权限过滤，过滤条件下推到向量库层</font>
 3. <font style="color:rgb(15, 17, 21);">两级权限管控：部门级 + 文档级</font>
 
