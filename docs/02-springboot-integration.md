@@ -49,7 +49,7 @@ HarnessAgent 跑通三件事：工作区驱动的人格（AGENTS.md）、会话�
 
 ## 1.2 四框架对比更新
 | 框架 | 定位 | 核心优势 | 适用场景 |
-| --- | --- | --- | --- |
+| :--- | :--- | :--- | :--- |
 | LangChain4j | 一站式大模型应用开发工具箱 | 组件最丰富、社区最成熟、生态最广 | 通用 Java AI 应用、RAG、工具调用 |
 | Spring AI | Spring 官方 AI 集成框架 | Spring 生态原生集成、标准化强 | SpringBoot 3.x 项目 |
 | AgentScope | 智能体工程化框架 | 多 Agent 协同、生产底座完善（沙箱、权限、审计）、原生支持多智能体 | 复杂多 Agent 业务系统、生产级 Agent |
@@ -126,7 +126,7 @@ sequenceDiagram
 常见方案对比：
 
 | 方案 | 适合场景 | 推荐度 |
-| --- | --- | --- |
+| :--- | :--- | :--- |
 | 一次性返回字符串 | 简单 Demo、短答案 | ★ |
 | SSE | 网页端、后台系统、企业应用 | ★★★★★ |
 | WebSocket | 高并发聊天、IM | ★★★★ |
@@ -171,7 +171,7 @@ SseEmitter emitter = new SseEmitter(60 * 1000L); // 60秒
 SSE 是一种**协议**（Server-Sent Events），WebFlux 是一种**编程模型**（响应式非阻塞）。两者不是互斥关系——WebFlux 可以用来实现 SSE，Spring MVC 也可以用 `SseEmitter` 实现 SSE。
 
 | 维度 | Spring MVC + SseEmitter | WebFlux + Flux |
-| --- | --- | --- |
+| :--- | :--- | :--- |
 | 编程模型 | 命令式、同步阻塞 | 响应式、异步非阻塞 |
 | 并发能力 | 低（每个连接占用一个线程） | 高（基于事件循环，Netty 驱动） |
 | 资源占用 | 高 | 低 |
@@ -224,7 +224,7 @@ SSE 是一种**协议**（Server-Sent Events），WebFlux 是一种**编程模�
 
 ## 6. 常用工具类
 | 工具类 | 作用 |
-| --- | --- |
+| :--- | :--- |
 | Token 计数工具 | 成本统计、上下文长度校验 |
 | 文本清洗工具 | 去乱码、多余空格、换行、无效字符 |
 | SSE 格式转换工具 | 统一事件格式、心跳保活 |
@@ -363,7 +363,7 @@ public class VectorValidateUtil {
 
 ## 7. 5 个 Starter 依赖整合
 | 序号 | Starter | 用途 | 适用场景 |
-| --- | --- | --- | --- |
+| :--- | :--- | :--- | :--- |
 | 1 | spring-ai-openai-spring-boot-starter | 大模型调用（OpenAI 兼容接口） | 通用大模型对话、Function Calling |
 | 2 | langchain4j-spring-boot-starter | Agent 框架（RAG/Agent/记忆/工具） | 完整 Agent 应用开发 |
 | 3 | milvus-sdk-java | 向量数据库 | RAG 知识库、长期记忆 |
