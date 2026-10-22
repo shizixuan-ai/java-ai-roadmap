@@ -447,34 +447,35 @@ public class VectorValidateUtil {
 >
 
 <script type="module">
-  window.addEventListener('load', () => {
-    // 1. 找到所有被 Jekyll 生成的 mermaid 代码块
-    const codeBlocks = document.querySelectorAll('.language-mermaid');
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
 
-    codeBlocks.forEach((block) => {
-      // 提取纯文本内容（去除 HTML 标签）
-      const codeText = block.textContent;
+  // 初始化 Mermaid，禁止自动加载，由我们手动触发
+  mermaid.initialize({ startOnLoad: false, theme: 'default' });
 
-      // 创建一个新的 div，专门给 Mermaid 用
+  window.addEventListener('load', async () => {
+    // 找到所有被 Jekyll 渲染出来的 mermaid 代码块
+    const blocks = document.querySelectorAll('pre code.language-mermaid');
+
+    blocks.forEach((block) => {
+      const codeText = block.textContent; // 提取纯文本
+
+      // 创建一个全新的 div
       const mermaidDiv = document.createElement('div');
       mermaidDiv.className = 'mermaid';
-      mermaidDiv.textContent = codeText; // 这里放进去的是纯文本！
+      mermaidDiv.textContent = codeText;
 
-      // 用新的 div 替换掉原来的 <pre><code>
-      block.parentElement.replaceWith(mermaidDiv);
+      // 找到包裹它的 <pre> 标签，并用新的 div 整个替换掉！
+      const preElement = block.closest('pre');
+      if (preElement) {
+        preElement.replaceWith(mermaidDiv);
+      }
     });
 
-    // 2. 引入 Mermaid 并渲染
-    import('https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs')
-      .then((mermaidModule) => {
-        const mermaid = mermaidModule.default;
-        mermaid.initialize({
-          startOnLoad: false,
-          theme: 'default'
-        });
-
-        // 3. 运行渲染
-        mermaid.run().catch(err => console.error('Mermaid 渲染失败:', err));
-      });
+    // 最后，让 Mermaid 渲染页面上所有的 div.mermaid
+    try {
+      await mermaid.run();
+    } catch (err) {
+      console.error('Mermaid 渲染失败:', err);
+    }
   });
 </script>
