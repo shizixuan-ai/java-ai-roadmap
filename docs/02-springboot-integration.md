@@ -48,6 +48,7 @@ agent.call(new UserMessage("我叫什么？我今天要干什么？"), ctx).bloc
 HarnessAgent 跑通三件事：工作区驱动的人格（AGENTS.md）、会话自动持久化（相同 sessionId 的第二轮记得第一轮）、对话压缩（超阈值后自动压缩 + 长期事实落到 MEMORY.md）。
 
 ## 1.2 四框架对比更新
+
 | 框架 | 定位 | 核心优势 | 适用场景 |
 | :--- | :--- | :--- | :--- |
 | LangChain4j | 一站式大模型应用开发工具箱 | 组件最丰富、社区最成熟、生态最广 | 通用 Java AI 应用、RAG、工具调用 |
@@ -225,6 +226,7 @@ SSE 是一种**协议**（Server-Sent Events），WebFlux 是一种**编程模�
 ---
 
 ## 6. 常用工具类
+
 | 工具类 | 作用 |
 | :--- | :--- |
 | Token 计数工具 | 成本统计、上下文长度校验 |
@@ -364,6 +366,7 @@ public class VectorValidateUtil {
 ---
 
 ## 7. 5 个 Starter 依赖整合
+
 | 序号 | Starter | 用途 | 适用场景 |
 | :--- | :--- | :--- | :--- |
 | 1 | spring-ai-openai-spring-boot-starter | 大模型调用（OpenAI 兼容接口） | 通用大模型对话、Function Calling |
