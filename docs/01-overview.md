@@ -65,7 +65,7 @@ AI 完整发展链路，从简单到智能：
 
 后续所有技术，都是为了补这三个缺陷。
 
-![LLM 三大缺陷](./docs/pic/img.png)
+![LLM 三大缺陷](./pic/img.png)
 
 ---
 
@@ -140,4 +140,31 @@ Java 工程能力是根基，AI 是增量能力。根基稳了，增量才有价
 + 怎么做内部知识库？
 + 怎么做智能客服？
 + 怎么做文档总结系统？
+
+<script type="module">
+  // 等待页面完全加载
+  window.addEventListener('load', () => {
+    // 1. 把 Jekyll 生成的 language-mermaid 类替换为 mermaid
+    const mermaidBlocks = document.querySelectorAll('.language-mermaid');
+    mermaidBlocks.forEach(block => {
+      block.parentElement.classList.add('mermaid');
+      // 隐藏原始的代码格式
+      block.parentElement.style.backgroundColor = 'transparent';
+      block.parentElement.style.border = 'none';
+      block.style.display = 'none';
+    });
+
+    // 2. 动态引入 Mermaid 库
+    import('https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs')
+      .then((mermaidModule) => {
+        const mermaid = mermaidModule.default;
+        mermaid.initialize({
+          startOnLoad: false, // 自己手动触发
+          theme: 'default'
+        });
+        // 3. 强制渲染
+        mermaid.run().catch(err => console.error('Mermaid 渲染失败:', err));
+      });
+  });
+</script>
 

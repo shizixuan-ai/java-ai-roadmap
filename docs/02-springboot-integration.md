@@ -441,3 +441,29 @@ public class VectorValidateUtil {
 > **避坑提醒**：Spring AI 1.0.0 要求 SpringBoot 3.2+；如果还在用 SpringBoot 2.7，用 LangChain4j 更合适。
 >
 
+<script type="module">
+  // 等待页面完全加载
+  window.addEventListener('load', () => {
+    // 1. 把 Jekyll 生成的 language-mermaid 类替换为 mermaid
+    const mermaidBlocks = document.querySelectorAll('.language-mermaid');
+    mermaidBlocks.forEach(block => {
+      block.parentElement.classList.add('mermaid');
+      // 隐藏原始的代码格式
+      block.parentElement.style.backgroundColor = 'transparent';
+      block.parentElement.style.border = 'none';
+      block.style.display = 'none';
+    });
+
+    // 2. 动态引入 Mermaid 库
+    import('https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs')
+      .then((mermaidModule) => {
+        const mermaid = mermaidModule.default;
+        mermaid.initialize({
+          startOnLoad: false, // 自己手动触发
+          theme: 'default'
+        });
+        // 3. 强制渲染
+        mermaid.run().catch(err => console.error('Mermaid 渲染失败:', err));
+      });
+  });
+</script>
