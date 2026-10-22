@@ -147,27 +147,33 @@ Java 工程能力是根基，AI 是增量能力。根基稳了，增量才有价
 + 怎么做文档总结系统？
 
 <script type="module">
-  // 等待页面完全加载
   window.addEventListener('load', () => {
-    // 1. 把 Jekyll 生成的 language-mermaid 类替换为 mermaid
-    const mermaidBlocks = document.querySelectorAll('.language-mermaid');
-    mermaidBlocks.forEach(block => {
-      block.parentElement.classList.add('mermaid');
-      // 隐藏原始的代码格式
-      block.parentElement.style.backgroundColor = 'transparent';
-      block.parentElement.style.border = 'none';
-      block.style.display = 'none';
+    // 1. 找到所有被 Jekyll 生成的 mermaid 代码块
+    const codeBlocks = document.querySelectorAll('.language-mermaid');
+
+    codeBlocks.forEach((block) => {
+      // 提取纯文本内容（去除 HTML 标签）
+      const codeText = block.textContent;
+
+      // 创建一个新的 div，专门给 Mermaid 用
+      const mermaidDiv = document.createElement('div');
+      mermaidDiv.className = 'mermaid';
+      mermaidDiv.textContent = codeText; // 这里放进去的是纯文本！
+
+      // 用新的 div 替换掉原来的 <pre><code>
+      block.parentElement.replaceWith(mermaidDiv);
     });
 
-    // 2. 动态引入 Mermaid 库
+    // 2. 引入 Mermaid 并渲染
     import('https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs')
       .then((mermaidModule) => {
         const mermaid = mermaidModule.default;
         mermaid.initialize({
-          startOnLoad: false, // 自己手动触发
+          startOnLoad: false,
           theme: 'default'
         });
-        // 3. 强制渲染
+
+        // 3. 运行渲染
         mermaid.run().catch(err => console.error('Mermaid 渲染失败:', err));
       });
   });
