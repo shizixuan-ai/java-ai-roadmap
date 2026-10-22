@@ -13,33 +13,33 @@
 + 防责任不清
 
 ### 1.1 生产级 AI 网关 5 层设计
-![AI 网关 5 层设计](docs/pic/img_7.png)
+![AI 网关 5 层设计](./docs/pic/img_7.png)
 
-### <font style="color:rgb(15, 17, 21);">1.2 鉴权方式</font>
-+ **<font style="color:rgb(15, 17, 21);">AK/SK 签名</font>**<font style="color:rgb(15, 17, 21);">：适合服务端调用、第三方系统接入</font>
-+ **<font style="color:rgb(15, 17, 21);">JWT</font>**<font style="color:rgb(15, 17, 21);">：适合前端用户调用，配合短期过期、刷新令牌、黑名单</font>
+### 1.2 鉴权方式
++ **AK/SK 签名**：适合服务端调用、第三方系统接入
++ **JWT**：适合前端用户调用，配合短期过期、刷新令牌、黑名单
 
-### <font style="color:rgb(15, 17, 21);">1.3 普通登录态为什么不够用</font>
-<font style="color:rgb(15, 17, 21);">普通登录态解决“用户是否登录”，AI 接口还需要回答：</font>
+### 1.3 普通登录态为什么不够用
+普通登录态解决“用户是否登录”，AI 接口还需要回答：
 
-+ <font style="color:rgb(15, 17, 21);">这个应用能不能调用大模型？</font>
-+ <font style="color:rgb(15, 17, 21);">这个用户有没有权限使用某个模型？</font>
-+ <font style="color:rgb(15, 17, 21);">这个 Key 有没有过期？</font>
-+ <font style="color:rgb(15, 17, 21);">这个用户今天用了多少 Token？</font>
-+ <font style="color:rgb(15, 17, 21);">这个应用有没有超过配额？</font>
-+ <font style="color:rgb(15, 17, 21);">这次调用能不能审计？</font>
++ 这个应用能不能调用大模型？
++ 这个用户有没有权限使用某个模型？
++ 这个 Key 有没有过期？
++ 这个用户今天用了多少 Token？
++ 这个应用有没有超过配额？
++ 这次调用能不能审计？
 
-### <font style="color:rgb(15, 17, 21);">1.4 上线检查清单</font>
-<font style="color:rgb(15, 17, 21);">✅</font><font style="color:rgb(15, 17, 21);"> 所有大模型请求经过网关</font><font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">✅</font><font style="color:rgb(15, 17, 21);"> AK/SK 签名已实现</font><font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">✅</font><font style="color:rgb(15, 17, 21);"> 时间戳防重放</font><font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">✅</font><font style="color:rgb(15, 17, 21);"> Nonce 防重复请求</font><font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">✅</font><font style="color:rgb(15, 17, 21);"> 限流规则已配置</font><font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">✅</font><font style="color:rgb(15, 17, 21);"> 配额规则已配置</font><font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">✅</font><font style="color:rgb(15, 17, 21);"> 审计日志已落库</font><font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">✅</font><font style="color:rgb(15, 17, 21);"> 异常场景已降级</font>
+### 1.4 上线检查清单
+✅ 所有大模型请求经过网关
+✅ AK/SK 签名已实现
+✅ 时间戳防重放
+✅ Nonce 防重复请求
+✅ 限流规则已配置
+✅ 配额规则已配置
+✅ 审计日志已落库
+✅ 异常场景已降级
 
-### <font style="color:rgb(15, 17, 21);">1.5 鉴权过滤器完整代码</font>
+### 1.5 鉴权过滤器完整代码
 ```java
 @Component
 @Slf4j
@@ -118,19 +118,19 @@ public class AiGatewayAuthFilter implements Filter {
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">2. 敏感词 + 权限 + 审计日志</font>
-<font style="color:rgb(15, 17, 21);">AI 系统完整合规防护体系，三大核心模块：</font>
+## 2. 敏感词 + 权限 + 审计日志
+AI 系统完整合规防护体系，三大核心模块：
 
-1. <font style="color:rgb(15, 17, 21);">内容合规：DFA 高性能敏感词过滤器，输入输出双重拦截</font>
-2. <font style="color:rgb(15, 17, 21);">权限合规：三级权限管控，RAG 知识库多租户数据隔离</font>
-3. <font style="color:rgb(15, 17, 21);">审计合规：AOP 自动采集全链路操作日志</font>
+1. 内容合规：DFA 高性能敏感词过滤器，输入输出双重拦截
+2. 权限合规：三级权限管控，RAG 知识库多租户数据隔离
+3. 审计合规：AOP 自动采集全链路操作日志
 
-### <font style="color:rgb(15, 17, 21);">2.1 敏感词方案</font>
-+ <font style="color:rgb(15, 17, 21);">方案一：本地 DFA 前缀树，轻量、无依赖</font>
-+ <font style="color:rgb(15, 17, 21);">方案二：云内容安全 API，适合等保、公网业务、企业级场景</font>
-+ <font style="color:rgb(15, 17, 21);">推荐生产：本地 DFA 第一层 + 云 API 第二层</font>
+### 2.1 敏感词方案
++ 方案一：本地 DFA 前缀树，轻量、无依赖
++ 方案二：云内容安全 API，适合等保、公网业务、企业级场景
++ 推荐生产：本地 DFA 第一层 + 云 API 第二层
 
-#### <font style="color:rgb(15, 17, 21);">2.1.1 DFA 敏感词过滤器完整代码</font>
+#### 2.1.1 DFA 敏感词过滤器完整代码
 ```java
 @Component
 public class SensitiveWordFilter {
@@ -187,24 +187,24 @@ public class SensitiveWordFilter {
 }
 ```
 
-### <font style="color:rgb(15, 17, 21);">2.2 敏感词过滤核心原则</font>
-+ <font style="color:rgb(15, 17, 21);">违规内容进不来、敏感信息出不去</font>
-+ <font style="color:rgb(15, 17, 21);">输入输出双重过滤</font>
-+ <font style="color:rgb(15, 17, 21);">敏感词库可配置，不要硬编码</font>
-+ <font style="color:rgb(15, 17, 21);">校验日志必须留存</font>
+### 2.2 敏感词过滤核心原则
++ 违规内容进不来、敏感信息出不去
++ 输入输出双重过滤
++ 敏感词库可配置，不要硬编码
++ 校验日志必须留存
 
-### <font style="color:rgb(15, 17, 21);">2.3 三级权限管控</font>
-+ <font style="color:rgb(15, 17, 21);">功能权限：普通员工/管理员/超级管理员</font>
-+ <font style="color:rgb(15, 17, 21);">数据权限：检索知识库文档自动过滤所属部门</font>
-+ <font style="color:rgb(15, 17, 21);">工具权限：限制角色可调用工具</font>
+### 2.3 三级权限管控
++ 功能权限：普通员工/管理员/超级管理员
++ 数据权限：检索知识库文档自动过滤所属部门
++ 工具权限：限制角色可调用工具
 
-### <font style="color:rgb(15, 17, 21);">2.4 审计日志</font>
-+ <font style="color:rgb(15, 17, 21);">用户提问、文档上传、向量库新增、工具调用、管理员配置修改全部记录</font>
-+ <font style="color:rgb(15, 17, 21);">审计日志字段：userId、userName、deptId、operationType、content、ip、createTime、success</font>
-+ <font style="color:rgb(15, 17, 21);">异步写入，不阻塞主流程</font>
+### 2.4 审计日志
++ 用户提问、文档上传、向量库新增、工具调用、管理员配置修改全部记录
++ 审计日志字段：userId、userName、deptId、operationType、content、ip、createTime、success
++ 异步写入，不阻塞主流程
 
-### <font style="color:rgb(15, 17, 21);">2.5 三级权限管控 + 审计日志代码</font>
-#### <font style="color:rgb(15, 17, 21);">登录用户上下文</font>
+### 2.5 三级权限管控 + 审计日志代码
+#### 登录用户上下文
 ```java
 @Component
 public class SecurityContextHolder {
@@ -224,7 +224,7 @@ public class SecurityContextHolder {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">权限校验 AOP 切面</font>
+#### 权限校验 AOP 切面
 ```java
 @Aspect
 @Component
@@ -249,7 +249,7 @@ public class PermissionAspect {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">审计日志 AOP 切面</font>
+#### 审计日志 AOP 切面
 ```java
 @Aspect
 @Component
@@ -286,33 +286,33 @@ public class OperationLogAspect {
 }
 ```
 
-### <font style="color:rgb(15, 17, 21);">2.6 新手落地必踩 5 个致命合规坑</font>
-1. <font style="color:rgb(15, 17, 21);">只校验用户输入，忽略 AI 输出审核</font>
-2. <font style="color:rgb(15, 17, 21);">权限仅前端控制，后端不做校验</font>
-3. <font style="color:rgb(15, 17, 21);">敏感词库杂乱，误杀率过高</font>
-4. <font style="color:rgb(15, 17, 21);">审计日志原样存储手机号、身份证</font>
-5. <font style="color:rgb(15, 17, 21);">同步写入审计日志，拖慢问答接口</font>
+### 2.6 新手落地必踩 5 个致命合规坑
+1. 只校验用户输入，忽略 AI 输出审核
+2. 权限仅前端控制，后端不做校验
+3. 敏感词库杂乱，误杀率过高
+4. 审计日志原样存储手机号、身份证
+5. 同步写入审计日志，拖慢问答接口
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">3. 多租户权限隔离</font>
-### <font style="color:rgb(15, 17, 21);">3.1 三种方案</font>
-| <font style="color:rgb(15, 17, 21);">方案</font> | <font style="color:rgb(15, 17, 21);">实现方式</font> | <font style="color:rgb(15, 17, 21);">优势</font> | <font style="color:rgb(15, 17, 21);">劣势</font> | <font style="color:rgb(15, 17, 21);">适用场景</font> |
+## 3. 多租户权限隔离
+### 3.1 三种方案
+| 方案 | 实现方式 | 优势 | 劣势 | 适用场景 |
 | --- | --- | --- | --- | --- |
-| <font style="color:rgb(15, 17, 21);">分集合/分库</font> | <font style="color:rgb(15, 17, 21);">每个部门单独建 Milvus 集合</font> | <font style="color:rgb(15, 17, 21);">隔离级别最高</font> | <font style="color:rgb(15, 17, 21);">运维成本高</font> | <font style="color:rgb(15, 17, 21);">强隔离、子公司/租户</font> |
-| <font style="color:rgb(15, 17, 21);">标量字段过滤</font> | <font style="color:rgb(15, 17, 21);">文档打部门 ID、权限标签，检索时过滤</font> | <font style="color:rgb(15, 17, 21);">零侵入、成本低、灵活</font> | <font style="color:rgb(15, 17, 21);">依赖过滤逻辑</font> | <font style="color:rgb(15, 17, 21);">企业内部多部门、中小规模</font> |
-| <font style="color:rgb(15, 17, 21);">行级权限管控</font> | <font style="color:rgb(15, 17, 21);">对接权限系统，逐文档配置</font> | <font style="color:rgb(15, 17, 21);">粒度最细</font> | <font style="color:rgb(15, 17, 21);">实现复杂、性能损耗</font> | <font style="color:rgb(15, 17, 21);">涉密文档、精细化权限</font> |
+| 分集合/分库 | 每个部门单独建 Milvus 集合 | 隔离级别最高 | 运维成本高 | 强隔离、子公司/租户 |
+| 标量字段过滤 | 文档打部门 ID、权限标签，检索时过滤 | 零侵入、成本低、灵活 | 依赖过滤逻辑 | 企业内部多部门、中小规模 |
+| 行级权限管控 | 对接权限系统，逐文档配置 | 粒度最细 | 实现复杂、性能损耗 | 涉密文档、精细化权限 |
 
 
-<font style="color:rgb(15, 17, 21);">推荐：绝大多数企业内部知识库，基于 Milvus 标量过滤最优。</font>
+推荐：绝大多数企业内部知识库，基于 Milvus 标量过滤最优。
 
-### <font style="color:rgb(15, 17, 21);">3.2 生产落地三步</font>
-1. <font style="color:rgb(15, 17, 21);">文档入库注入权限元数据：</font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">deptId</font><font style="color:rgb(15, 17, 21);">、</font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">permissionLevel</font>`<font style="color:rgb(15, 17, 21);">、</font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">ownerId</font>
-2. <font style="color:rgb(15, 17, 21);">检索环节增加权限过滤，过滤条件下推到向量库层</font>
-3. <font style="color:rgb(15, 17, 21);">两级权限管控：部门级 + 文档级</font>
+### 3.2 生产落地三步
+1. 文档入库注入权限元数据：deptId、permissionLevel`、ownerId
+2. 检索环节增加权限过滤，过滤条件下推到向量库层
+3. 两级权限管控：部门级 + 文档级
 
-### <font style="color:rgb(15, 17, 21);">3.3 标量字段过滤完整代码</font>
-#### <font style="color:rgb(15, 17, 21);">文档入库注入权限元数据</font>
+### 3.3 标量字段过滤完整代码
+#### 文档入库注入权限元数据
 ```java
 @Service
 public class DocumentService {
@@ -349,7 +349,7 @@ public class DocumentService {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">检索时权限过滤（下推到向量库层）</font>
+#### 检索时权限过滤（下推到向量库层）
 ```java
 public String chatWithAuth(String question, String currentDeptId, String currentUserId) {
     // 构造权限过滤条件：部门可见 + 全员可见 + 自己创建的私密文档
@@ -378,53 +378,53 @@ public String chatWithAuth(String question, String currentDeptId, String current
 }
 ```
 
-**<font style="color:rgb(15, 17, 21);">关键点</font>**<font style="color:rgb(15, 17, 21);">：过滤条件是在 Milvus 内部执行的，不会把越权数据返回到 Java 服务层，从根源上避免了数据泄露。</font>
+**关键点**：过滤条件是在 Milvus 内部执行的，不会把越权数据返回到 Java 服务层，从根源上避免了数据泄露。
 
-### <font style="color:rgb(15, 17, 21);">3.4 坑</font>
-1. <font style="color:rgb(15, 17, 21);">过滤字段不建索引，检索性能暴跌</font>
-2. <font style="color:rgb(15, 17, 21);">权限过滤放在生成环节，存在数据泄露风险</font>
-3. <font style="color:rgb(15, 17, 21);">直接用前端传的部门 ID，存在越权漏洞</font>
-4. <font style="color:rgb(15, 17, 21);">元数据类型不匹配，过滤条件失效</font>
-5. <font style="color:rgb(15, 17, 21);">跨部门共享需求没预留</font>
+### 3.4 坑
+1. 过滤字段不建索引，检索性能暴跌
+2. 权限过滤放在生成环节，存在数据泄露风险
+3. 直接用前端传的部门 ID，存在越权漏洞
+4. 元数据类型不匹配，过滤条件失效
+5. 跨部门共享需求没预留
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">4. 多租户 RAG：生产级无感隔离</font>
-<font style="color:rgb(15, 17, 21);">目标：用户无感知、数据强隔离、检索高准确、运维低成本。</font>
+## 4. 多租户 RAG：生产级无感隔离
+目标：用户无感知、数据强隔离、检索高准确、运维低成本。
 
-### <font style="color:rgb(15, 17, 21);">4.1 四层隔离</font>
-1. **<font style="color:rgb(15, 17, 21);">会话级租户绑定</font>**<font style="color:rgb(15, 17, 21);">：租户标识不依赖前端，从可信渠道解析</font>
-    - <font style="color:rgb(15, 17, 21);">企业 IM 嵌入：企微/飞书/钉钉免登授权</font>
-    - <font style="color:rgb(15, 17, 21);">专属域名/路径嵌入：网关解析 Host/URI</font>
-    - <font style="color:rgb(15, 17, 21);">AK/SK 签名鉴权：第三方系统集成</font>
-2. **<font style="color:rgb(15, 17, 21);">路由分发层</font>**<font style="color:rgb(15, 17, 21);">：分级隔离</font>
-    - <font style="color:rgb(15, 17, 21);">普通租户：逻辑隔离</font>
-    - <font style="color:rgb(15, 17, 21);">核心/涉密租户：物理隔离</font>
-    - <font style="color:rgb(15, 17, 21);">超大型客户：独立向量库实例</font>
-3. **<font style="color:rgb(15, 17, 21);">向量检索层</font>**<font style="color:rgb(15, 17, 21);">：元数据前置过滤 / 独立集合独立索引 / 二次兜底校验</font>
-4. **<font style="color:rgb(15, 17, 21);">模型资源层隔离</font>**<font style="color:rgb(15, 17, 21);">：租户级模型配额、会话级流式输出隔离、租户级合规策略隔离</font>
+### 4.1 四层隔离
+1. **会话级租户绑定**：租户标识不依赖前端，从可信渠道解析
+    - 企业 IM 嵌入：企微/飞书/钉钉免登授权
+    - 专属域名/路径嵌入：网关解析 Host/URI
+    - AK/SK 签名鉴权：第三方系统集成
+2. **路由分发层**：分级隔离
+    - 普通租户：逻辑隔离
+    - 核心/涉密租户：物理隔离
+    - 超大型客户：独立向量库实例
+3. **向量检索层**：元数据前置过滤 / 独立集合独立索引 / 二次兜底校验
+4. **模型资源层隔离**：租户级模型配额、会话级流式输出隔离、租户级合规策略隔离
 
-### <font style="color:rgb(15, 17, 21);">4.2 数字人专属优化</font>
-+ <font style="color:rgb(15, 17, 21);">多轮会话上下文强绑定</font>
-+ <font style="color:rgb(15, 17, 21);">租户级数字人人设隔离</font>
-+ <font style="color:rgb(15, 17, 21);">转人工自动路由</font>
-+ <font style="color:rgb(15, 17, 21);">租户级缓存策略</font>
+### 4.2 数字人专属优化
++ 多轮会话上下文强绑定
++ 租户级数字人人设隔离
++ 转人工自动路由
++ 租户级缓存策略
 
-### <font style="color:rgb(15, 17, 21);">4.3 生产必踩 7 坑</font>
-1. <font style="color:rgb(15, 17, 21);">线程上下文泄露串租户</font>
-2. <font style="color:rgb(15, 17, 21);">租户越开越多，集合爆炸</font>
-3. <font style="color:rgb(15, 17, 21);">权限变更后双库数据不一致</font>
-4. <font style="color:rgb(15, 17, 21);">大模型生成串租户内容</font>
-5. <font style="color:rgb(15, 17, 21);">缓存穿透导致越权访问</font>
-6. <font style="color:rgb(15, 17, 21);">数字人形象音色串租户</font>
-7. <font style="color:rgb(15, 17, 21);">对话日志混存，审计过不了</font>
+### 4.3 生产必踩 7 坑
+1. 线程上下文泄露串租户
+2. 租户越开越多，集合爆炸
+3. 权限变更后双库数据不一致
+4. 大模型生成串租户内容
+5. 缓存穿透导致越权访问
+6. 数字人形象音色串租户
+7. 对话日志混存，审计过不了
 
-### <font style="color:rgb(15, 17, 21);">4.4 租户饥饿问题解决方案</font>
-**什么是租户饥饿**<font style="color:rgb(15, 17, 21);">：高峰期一个租户的大量请求占满模型配额，其他租户全部卡顿超时。这是多租户场景下的“吵闹邻居”问题——单个租户过度使用共享资源，导致其他租户无法获得应有的服务。</font>
+### 4.4 租户饥饿问题解决方案
+**什么是租户饥饿**：高峰期一个租户的大量请求占满模型配额，其他租户全部卡顿超时。这是多租户场景下的“吵闹邻居”问题——单个租户过度使用共享资源，导致其他租户无法获得应有的服务。
 
 **解决方案：配额 + 限流 + 舱壁隔离三级防护**
 
-#### <font style="color:rgb(15, 17, 21);">第一级：租户级配额管理</font>
+#### 第一级：租户级配额管理
 ```java
 @Service
 public class TenantQuotaService {
@@ -466,7 +466,7 @@ public class TenantQuotaService {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">第二级：租户级限流（防止单租户占满）</font>
+#### 第二级：租户级限流（防止单租户占满）
 ```java
 public boolean acquire(String tenantId, int maxPermits) {
     String key = "ai:rate:" + tenantId;
@@ -478,16 +478,16 @@ public boolean acquire(String tenantId, int maxPermits) {
 }
 ```
 
-<font style="color:rgb(15, 17, 21);">建议配置：</font>
+建议配置：
 
-| <font style="color:rgb(15, 17, 21);">租户等级</font> | <font style="color:rgb(15, 17, 21);">每分钟请求上限</font> | <font style="color:rgb(15, 17, 21);">Token 配额（日）</font> |
+| 租户等级 | 每分钟请求上限 | Token 配额（日） |
 | --- | --- | --- |
-| <font style="color:rgb(15, 17, 21);">普通租户</font> | <font style="color:rgb(15, 17, 21);">20 次</font> | <font style="color:rgb(15, 17, 21);">10,000</font> |
-| <font style="color:rgb(15, 17, 21);">标准租户</font> | <font style="color:rgb(15, 17, 21);">50 次</font> | <font style="color:rgb(15, 17, 21);">100,000</font> |
-| <font style="color:rgb(15, 17, 21);">VIP 租户</font> | <font style="color:rgb(15, 17, 21);">100 次</font> | <font style="color:rgb(15, 17, 21);">1,000,000</font> |
+| 普通租户 | 20 次 | 10,000 |
+| 标准租户 | 50 次 | 100,000 |
+| VIP 租户 | 100 次 | 1,000,000 |
 
 
-#### <font style="color:rgb(15, 17, 21);">第三级：舱壁隔离（ThreadPoolExecutor + Semaphore）</font>
+#### 第三级：舱壁隔离（ThreadPoolExecutor + Semaphore）
 ```java
 @Component
 public class TenantBulkhead {
@@ -509,71 +509,71 @@ public class TenantBulkhead {
 }
 ```
 
-**<font style="color:rgb(15, 17, 21);">核心机制</font>**<font style="color:rgb(15, 17, 21);">：每个租户拥有独立的调用额度，耗尽后无法使用服务；租户级流量隔离，有效防止多租户间的资源争抢与相互干扰，避免个别租户的突发流量影响其他租户的正常使用</font><font style="color:rgb(15, 17, 21);">。</font>
+**核心机制**：每个租户拥有独立的调用额度，耗尽后无法使用服务；租户级流量隔离，有效防止多租户间的资源争抢与相互干扰，避免个别租户的突发流量影响其他租户的正常使用。
 
-**<font style="color:rgb(15, 17, 21);">超量处理策略</font>**<font style="color:rgb(15, 17, 21);">：</font>
+**超量处理策略**：
 
-| <font style="color:rgb(15, 17, 21);">使用率</font> | <font style="color:rgb(15, 17, 21);">处理策略</font> |
+| 使用率 | 处理策略 |
 | --- | --- |
-| <font style="color:rgb(15, 17, 21);">80%</font> | <font style="color:rgb(15, 17, 21);">提醒</font> |
-| <font style="color:rgb(15, 17, 21);">90%</font> | <font style="color:rgb(15, 17, 21);">预警</font> |
-| <font style="color:rgb(15, 17, 21);">100%</font> | <font style="color:rgb(15, 17, 21);">降级（切换小模型/返回缓存）</font> |
-| <font style="color:rgb(15, 17, 21);">120%</font> | <font style="color:rgb(15, 17, 21);">限流（拒绝新请求）</font> |
+| 80% | 提醒 |
+| 90% | 预警 |
+| 100% | 降级（切换小模型/返回缓存） |
+| 120% | 限流（拒绝新请求） |
 
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">5. 企业级私有化 AI 平台</font>
-### <font style="color:rgb(15, 17, 21);">5.1 五层架构
-</font><!-- 这是一张图片，ocr 内容为：智能客服 知识助手 业务应用层 代码助手 文档处理 接入网关层 监控 统一API 限流 鉴权 配额 运维监控体系 安全合规体系 对话引擎 对话调用 内容安全 RAG知识库 能力中台层 工具调用 PROMPT管理 弹性扩缩容 智能调度 容灾降级 多模型适配 模型服务层 量化加速 GPU集群 分布式存储 基础设施层 K8S编排 对象存储 -->
+## 5. 企业级私有化 AI 平台
+### 5.1 五层架构
+<!-- 这是一张图片，ocr 内容为：智能客服 知识助手 业务应用层 代码助手 文档处理 接入网关层 监控 统一API 限流 鉴权 配额 运维监控体系 安全合规体系 对话引擎 对话调用 内容安全 RAG知识库 能力中台层 工具调用 PROMPT管理 弹性扩缩容 智能调度 容灾降级 多模型适配 模型服务层 量化加速 GPU集群 分布式存储 基础设施层 K8S编排 对象存储 -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/21950178/1790046096084-12c067fe-61c2-4357-8ae3-f1b04fc4ac12.png)
-### <font style="color:rgb(15, 17, 21);">5.2 各层职责</font>
-1. **<font style="color:rgb(15, 17, 21);">基础设施层</font>**<font style="color:rgb(15, 17, 21);">：GPU 算力池化、存储、网络、K8s 编排</font>
-2. **<font style="color:rgb(15, 17, 21);">模型服务层</font>**<font style="color:rgb(15, 17, 21);">：多模型统一适配、智能路由、弹性扩缩容、容灾降级、量化加速</font>
-3. **<font style="color:rgb(15, 17, 21);">能力中台层</font>**<font style="color:rgb(15, 17, 21);">：RAG 知识库、对话引擎、工具调用、内容安全、Prompt 管理</font>
-4. **<font style="color:rgb(15, 17, 21);">接入网关层</font>**<font style="color:rgb(15, 17, 21);">：统一协议、身份鉴权、流量防护、配额管理、全链路埋点</font>
-5. **<font style="color:rgb(15, 17, 21);">业务应用层</font>**<font style="color:rgb(15, 17, 21);">：人事、研发、业务、运营等 AI 应用</font>
+### 5.2 各层职责
+1. **基础设施层**：GPU 算力池化、存储、网络、K8s 编排
+2. **模型服务层**：多模型统一适配、智能路由、弹性扩缩容、容灾降级、量化加速
+3. **能力中台层**：RAG 知识库、对话引擎、工具调用、内容安全、Prompt 管理
+4. **接入网关层**：统一协议、身份鉴权、流量防护、配额管理、全链路埋点
+5. **业务应用层**：人事、研发、业务、运营等 AI 应用
 
-#### <font style="color:rgb(15, 17, 21);">5.2.1 Java 开发在各层的职责</font>
-| <font style="color:rgb(15, 17, 21);">层级</font> | <font style="color:rgb(15, 17, 21);">Java 开发核心任务</font> | <font style="color:rgb(15, 17, 21);">不需要深入的部分</font> |
+#### 5.2.1 Java 开发在各层的职责
+| 层级 | Java 开发核心任务 | 不需要深入的部分 |
 | --- | --- | --- |
-| <font style="color:rgb(15, 17, 21);">基础设施层</font> | <font style="color:rgb(15, 17, 21);">配合做服务容器化、K8s 部署配置、健康检查接口开发</font> | <font style="color:rgb(15, 17, 21);">GPU 驱动、算力调度算法、网络底层</font> |
-| <font style="color:rgb(15, 17, 21);">模型服务层</font> | <font style="color:rgb(15, 17, 21);">实现模型路由层、统一 API 封装、配额与限流逻辑</font> | <font style="color:rgb(15, 17, 21);">模型本身的部署、量化、加速（由算法工程团队负责）</font> |
-| <font style="color:rgb(15, 17, 21);">能力中台层</font> | **100% 是 Java 后端核心工作**<font style="color:rgb(15, 17, 21);">——接口设计、业务逻辑、性能优化、RAG 服务、对话引擎、工具调用框架、内容安全、Prompt 管理</font> | <font style="color:rgb(15, 17, 21);">—</font> |
-| <font style="color:rgb(15, 17, 21);">接入网关层</font> | **核心主战场**<font style="color:rgb(15, 17, 21);">——鉴权过滤器、限流规则、配额管理、全链路埋点、协议适配（REST/SSE/WebSocket）</font> | <font style="color:rgb(15, 17, 21);">—</font> |
-| <font style="color:rgb(15, 17, 21);">业务应用层</font> | <font style="color:rgb(15, 17, 21);">基于平台能力快速搭建业务 AI 应用，对接前端/企业微信/钉钉</font> | <font style="color:rgb(15, 17, 21);">—</font> |
+| 基础设施层 | 配合做服务容器化、K8s 部署配置、健康检查接口开发 | GPU 驱动、算力调度算法、网络底层 |
+| 模型服务层 | 实现模型路由层、统一 API 封装、配额与限流逻辑 | 模型本身的部署、量化、加速（由算法工程团队负责） |
+| 能力中台层 | **100% 是 Java 后端核心工作**——接口设计、业务逻辑、性能优化、RAG 服务、对话引擎、工具调用框架、内容安全、Prompt 管理 | — |
+| 接入网关层 | **核心主战场**——鉴权过滤器、限流规则、配额管理、全链路埋点、协议适配（REST/SSE/WebSocket） | — |
+| 业务应用层 | 基于平台能力快速搭建业务 AI 应用，对接前端/企业微信/钉钉 | — |
 
 
-**一句话总结**<font style="color:rgb(15, 17, 21);">：能力中台层和接入网关层是 Java 开发者的核心阵地，基础设施层和模型服务层只需懂交互边界和调用方式，不需要深入底层实现。</font>
+**一句话总结**：能力中台层和接入网关层是 Java 开发者的核心阵地，基础设施层和模型服务层只需懂交互边界和调用方式，不需要深入底层实现。
 
-### <font style="color:rgb(15, 17, 21);">5.3 两大横向支撑</font>
-+ **<font style="color:rgb(15, 17, 21);">安全合规体系</font>**<font style="color:rgb(15, 17, 21);">：数据安全、权限管控、审计合规、内容安全</font>
-+ **<font style="color:rgb(15, 17, 21);">运维监控体系</font>**<font style="color:rgb(15, 17, 21);">：GPU 监控、日志中心、成本核算、自动化运维</font>
+### 5.3 两大横向支撑
++ **安全合规体系**：数据安全、权限管控、审计合规、内容安全
++ **运维监控体系**：GPU 监控、日志中心、成本核算、自动化运维
 
-### <font style="color:rgb(15, 17, 21);">5.4 落地路线</font>
-1. <font style="color:rgb(15, 17, 21);">基础平台搭建：1-2 个月</font>
-2. <font style="color:rgb(15, 17, 21);">能力完善推广：2-3 个月</font>
-3. <font style="color:rgb(15, 17, 21);">平台成熟运营：3-6 个月</font>
+### 5.4 落地路线
+1. 基础平台搭建：1-2 个月
+2. 能力完善推广：2-3 个月
+3. 平台成熟运营：3-6 个月
 
-### <font style="color:rgb(15, 17, 21);">5.5 架构设计核心原则</font>
-+ <font style="color:rgb(15, 17, 21);">分层解耦</font>
-+ <font style="color:rgb(15, 17, 21);">能力下沉</font>
-+ <font style="color:rgb(15, 17, 21);">可扩展性</font>
-+ <font style="color:rgb(15, 17, 21);">安全可控</font>
-+ <font style="color:rgb(15, 17, 21);">成本优先</font>
+### 5.5 架构设计核心原则
++ 分层解耦
++ 能力下沉
++ 可扩展性
++ 安全可控
++ 成本优先
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">6. 面试&简历亮点提炼</font>
-### <font style="color:rgb(15, 17, 21);">6.1 中级开发（3-5 年）</font>
-> <font style="color:rgb(15, 17, 21);">参与企业级私有化 AI 平台的能力中台设计与开发，负责 RAG 知识库、对话引擎模块的落地，实现多租户数据隔离。封装通用 AI 能力支撑多个业务应用接入，大幅提升业务 AI 需求落地效率。</font>
+## 6. 面试&简历亮点提炼
+### 6.1 中级开发（3-5 年）
+> 参与企业级私有化 AI 平台的能力中台设计与开发，负责 RAG 知识库、对话引擎模块的落地，实现多租户数据隔离。封装通用 AI 能力支撑多个业务应用接入，大幅提升业务 AI 需求落地效率。
 >
 
-### <font style="color:rgb(15, 17, 21);">6.2 高级开发（5 年+）</font>
-> <font style="color:rgb(15, 17, 21);">负责企业 AI 平台接入网关与能力中台层架构设计，实现多模型统一调用、智能路由、配额限流体系。设计多租户 RAG 知识库中台，支撑全公司十余个业务场景复用，整体大模型调用成本下降 40%。</font>
+### 6.2 高级开发（5 年+）
+> 负责企业 AI 平台接入网关与能力中台层架构设计，实现多模型统一调用、智能路由、配额限流体系。设计多租户 RAG 知识库中台，支撑全公司十余个业务场景复用，整体大模型调用成本下降 40%。
 >
 
-### <font style="color:rgb(15, 17, 21);">6.3 架构师岗</font>
-> <font style="color:rgb(15, 17, 21);">主导企业级私有化 AI 平台整体架构设计，采用五层架构实现算力池化、能力中台化、接入统一化。建立多模型智能调度、全链路安全合规与成本管控体系，支撑全公司 AI 应用快速落地，算力资源利用率提升 50%，项目交付周期缩短 60%。</font>
+### 6.3 架构师岗
+> 主导企业级私有化 AI 平台整体架构设计，采用五层架构实现算力池化、能力中台化、接入统一化。建立多模型智能调度、全链路安全合规与成本管控体系，支撑全公司 AI 应用快速落地，算力资源利用率提升 50%，项目交付周期缩短 60%。
 >
 

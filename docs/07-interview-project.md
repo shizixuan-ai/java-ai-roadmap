@@ -172,7 +172,7 @@ public class ChatController {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">知识库文档入库核心代码</font>
+#### 知识库文档入库核心代码
 ```java
 @Service
 public class DocumentIngestService {
@@ -227,7 +227,7 @@ public class DocumentIngestService {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">企业微信对接核心代码</font>
+#### 企业微信对接核心代码
 ```java
 @RestController
 @RequestMapping("/api/wxwork")
@@ -289,18 +289,18 @@ public class WxWorkController {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">面试项目数据速查</font>
-| <font style="color:rgb(15, 17, 21);">指标</font> | <font style="color:rgb(15, 17, 21);">数据</font> |
+#### 面试项目数据速查
+| 指标 | 数据 |
 | --- | --- |
-| <font style="color:rgb(15, 17, 21);">准确率提升</font> | <font style="color:rgb(15, 17, 21);">从 72% 提升至 88%</font> |
-| <font style="color:rgb(15, 17, 21);">成本降低</font> | <font style="color:rgb(15, 17, 21);">大模型调用成本降低 60%-70%</font> |
-| <font style="color:rgb(15, 17, 21);">并发支持</font> | <font style="color:rgb(15, 17, 21);">50 路并发稳定运行</font> |
-| <font style="color:rgb(15, 17, 21);">首字延迟</font> | <font style="color:rgb(15, 17, 21);">< 1 秒</font> |
-| <font style="color:rgb(15, 17, 21);">覆盖咨询量</font> | <font style="color:rgb(15, 17, 21);">覆盖 80% 内部常见咨询</font> |
-| <font style="color:rgb(15, 17, 21);">人工接待量下降</font> | <font style="color:rgb(15, 17, 21);">50%</font> |
-| <font style="color:rgb(15, 17, 21);">系统可用性</font> | <font style="color:rgb(15, 17, 21);">99.9%</font> |
-| <font style="color:rgb(15, 17, 21);">Token 节省</font> | <font style="color:rgb(15, 17, 21);">输入 Token 整体下降 30%-40%</font> |
-| <font style="color:rgb(15, 17, 21);">缓存命中率</font> | <font style="color:rgb(15, 17, 21);">≥ 40%</font> |
+| 准确率提升 | 从 72% 提升至 88% |
+| 成本降低 | 大模型调用成本降低 60%-70% |
+| 并发支持 | 50 路并发稳定运行 |
+| 首字延迟 | < 1 秒 |
+| 覆盖咨询量 | 覆盖 80% 内部常见咨询 |
+| 人工接待量下降 | 50% |
+| 系统可用性 | 99.9% |
+| Token 节省 | 输入 Token 整体下降 30%-40% |
+| 缓存命中率 | ≥ 40% |
 
 
 ### 2.10 简历亮点提炼
@@ -396,80 +396,80 @@ public class WxWorkController {
 </dependency>
 ```
 
-### <font style="color:rgb(15, 17, 21);">5.3 消息回调与问答实现</font>
-<font style="color:rgb(15, 17, 21);">企业微信硬性规则：回调接口必须在 5 秒内返回 success，否则重试 3 次。</font><font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">所以不能同步等大模型生成答案，要先返回 success，再异步处理问答，最后用客服消息推送结果。</font>
+### 5.3 消息回调与问答实现
+企业微信硬性规则：回调接口必须在 5 秒内返回 success，否则重试 3 次。
+所以不能同步等大模型生成答案，要先返回 success，再异步处理问答，最后用客服消息推送结果。
 
-### <font style="color:rgb(15, 17, 21);">5.4 新手必踩 5 坑</font>
-1. <font style="color:rgb(15, 17, 21);">回调 URL 校验一直失败</font>
-2. <font style="color:rgb(15, 17, 21);">消息重复收到好几次</font>
-3. <font style="color:rgb(15, 17, 21);">调用发送消息接口报错 42001</font>
-4. <font style="color:rgb(15, 17, 21);">用户收不到消息</font>
-5. <font style="color:rgb(15, 17, 21);">用户 ID 和部门 ID 对不上权限体系</font>
-
----
-
-## <font style="color:rgb(15, 17, 21);">6. 面试高频考点</font>
-### <font style="color:rgb(15, 17, 21);">6.1 基础概念题</font>
-+ <font style="color:rgb(15, 17, 21);">RAG 的完整流程是什么？</font>
-+ <font style="color:rgb(15, 17, 21);">RAG 有哪些常见优化方法？</font>
-+ <font style="color:rgb(15, 17, 21);">流式输出怎么实现？</font>
-+ <font style="color:rgb(15, 17, 21);">Function Calling 的执行流程是什么？</font>
-
-### <font style="color:rgb(15, 17, 21);">6.2 工程场景题</font>
-+ <font style="color:rgb(15, 17, 21);">大模型接口不稳定怎么处理？</font>
-+ <font style="color:rgb(15, 17, 21);">怎么做限流降级？</font>
-+ <font style="color:rgb(15, 17, 21);">怎么控制调用成本？</font>
-+ <font style="color:rgb(15, 17, 21);">怎么保证数据安全？</font>
-+ <font style="color:rgb(15, 17, 21);">怎么实现部门级权限隔离？</font>
-
-### <font style="color:rgb(15, 17, 21);">6.3 项目深挖题</font>
-+ <font style="color:rgb(15, 17, 21);">你做的项目准确率多少？</font>
-+ <font style="color:rgb(15, 17, 21);">遇到过最棘手的问题是什么？</font>
-+ <font style="color:rgb(15, 17, 21);">怎么解决的？</font>
-+ <font style="color:rgb(15, 17, 21);">如果再做一次你会怎么优化？</font>
-
-### <font style="color:rgb(15, 17, 21);">6.4 方案设计题</font>
-+ <font style="color:rgb(15, 17, 21);">给你一个业务场景，你怎么设计整体方案？</font>
-+ <font style="color:rgb(15, 17, 21);">怎么做内部知识库？</font>
-+ <font style="color:rgb(15, 17, 21);">怎么做智能客服？</font>
-+ <font style="color:rgb(15, 17, 21);">怎么做文档总结系统？</font>
+### 5.4 新手必踩 5 坑
+1. 回调 URL 校验一直失败
+2. 消息重复收到好几次
+3. 调用发送消息接口报错 42001
+4. 用户收不到消息
+5. 用户 ID 和部门 ID 对不上权限体系
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">7. 转型避坑指南</font>
-1. **<font style="color:rgb(15, 17, 21);">放弃 Java，去学 Python 卷算法</font>**<font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">卷不过科班，丢掉工程优势。正确方向：立足 Java，走 AI 工程化落地路线。</font>
-2. **<font style="color:rgb(15, 17, 21);">只会调 API，不做完整项目</font>**<font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">只会调 API 没有竞争力。正确方向：做完整生产级项目。</font>
-3. **<font style="color:rgb(15, 17, 21);">光学不练，收藏等于学会</font>**<font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">面试一问细节就露馅。正确方向：动手做完整智能客服项目。</font>
-4. **<font style="color:rgb(15, 17, 21);">盲目追新，丢了根基</font>**<font style="color:rgb(15, 17, 21);">
-</font><font style="color:rgb(15, 17, 21);">Java 工程能力是根基，AI 是增量能力。</font>
+## 6. 面试高频考点
+### 6.1 基础概念题
++ RAG 的完整流程是什么？
++ RAG 有哪些常见优化方法？
++ 流式输出怎么实现？
++ Function Calling 的执行流程是什么？
+
+### 6.2 工程场景题
++ 大模型接口不稳定怎么处理？
++ 怎么做限流降级？
++ 怎么控制调用成本？
++ 怎么保证数据安全？
++ 怎么实现部门级权限隔离？
+
+### 6.3 项目深挖题
++ 你做的项目准确率多少？
++ 遇到过最棘手的问题是什么？
++ 怎么解决的？
++ 如果再做一次你会怎么优化？
+
+### 6.4 方案设计题
++ 给你一个业务场景，你怎么设计整体方案？
++ 怎么做内部知识库？
++ 怎么做智能客服？
++ 怎么做文档总结系统？
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">8. Agent 生产踩坑实录（面试话术）</font>
-### <font style="color:rgb(15, 17, 21);">8.1 记忆错乱</font>
-+ <font style="color:rgb(15, 17, 21);">现象：A 用户看到 B 用户政策</font>
-+ <font style="color:rgb(15, 17, 21);">根因：向量召回没加租户隔离；sessionId 生成有 bug；没有相关性阈值过滤</font>
-+ <font style="color:rgb(15, 17, 21);">解决：向量召回强制带 </font>`<font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">tenant_id + user_id</font>`<font style="color:rgb(15, 17, 21);">；sessionId 和用户绑定；相关性阈值过滤</font>
+## 7. 转型避坑指南
+1. **放弃 Java，去学 Python 卷算法**
+卷不过科班，丢掉工程优势。正确方向：立足 Java，走 AI 工程化落地路线。
+2. **只会调 API，不做完整项目**
+只会调 API 没有竞争力。正确方向：做完整生产级项目。
+3. **光学不练，收藏等于学会**
+面试一问细节就露馅。正确方向：动手做完整智能客服项目。
+4. **盲目追新，丢了根基**
+Java 工程能力是根基，AI 是增量能力。
 
-### <font style="color:rgb(15, 17, 21);">8.2 任务死循环</font>
-+ <font style="color:rgb(15, 17, 21);">现象：Agent 卡住不动，token 疯狂消耗</font>
-+ <font style="color:rgb(15, 17, 21);">根因：没有最大执行步数；失败任务无限重试；工具返回格式不对</font>
-+ <font style="color:rgb(15, 17, 21);">解决：最大执行步数 15；失败重试上限 3 次 + 指数退避；工具结果格式化</font>
+---
 
-### <font style="color:rgb(15, 17, 21);">8.3 输出幻觉</font>
-+ <font style="color:rgb(15, 17, 21);">现象：Agent 编造不存在的数据和政策</font>
-+ <font style="color:rgb(15, 17, 21);">根因：没有检索结果相关性校验；Prompt 没有禁止编造；关键参数没锁定</font>
-+ <font style="color:rgb(15, 17, 21);">解决：空结果必拒答；Prompt 强约束；关键业务参数用实体记忆锁定</font>
+## 8. Agent 生产踩坑实录（面试话术）
+### 8.1 记忆错乱
++ 现象：A 用户看到 B 用户政策
++ 根因：向量召回没加租户隔离；sessionId 生成有 bug；没有相关性阈值过滤
++ 解决：向量召回强制带 `tenant_id + user_id`；sessionId 和用户绑定；相关性阈值过滤
 
-### <font style="color:rgb(15, 17, 21);">8.4 面试话术模板</font>
-> <font style="color:rgb(15, 17, 21);">我们 Agent 上线后主要遇到三类生产问题：
-</font><font style="color:rgb(15, 17, 21);">第一是记忆错乱，多租户场景下召回没有加租户隔离，导致用户信息串了。解决方式是向量召回强制带 tenant_id + user_id 过滤条件，sessionId 和用户绑定，召回结果加相关性阈值过滤。
-</font><font style="color:rgb(15, 17, 21);">第二是任务死循环，复杂任务规划没有步数限制，失败任务无限重试。解决方式是设置最大执行步数 15 步，失败重试上限 3 次加指数退避，重试耗尽降级跳过，工具返回结果统一格式化。
-</font><font style="color:rgb(15, 17, 21);">第三是输出幻觉，知识库没召回时大模型自己编数据。解决方式是检索为空时明确告诉大模型“无相关信息禁止编造”，System Prompt 加强约束，关键业务参数用实体记忆锁定注入。
-</font><font style="color:rgb(15, 17, 21);">这三个问题解决后，Agent 回答准确率从 72% 提升到 91%，生产故障基本清零。</font>
+### 8.2 任务死循环
++ 现象：Agent 卡住不动，token 疯狂消耗
++ 根因：没有最大执行步数；失败任务无限重试；工具返回格式不对
++ 解决：最大执行步数 15；失败重试上限 3 次 + 指数退避；工具结果格式化
+
+### 8.3 输出幻觉
++ 现象：Agent 编造不存在的数据和政策
++ 根因：没有检索结果相关性校验；Prompt 没有禁止编造；关键参数没锁定
++ 解决：空结果必拒答；Prompt 强约束；关键业务参数用实体记忆锁定
+
+### 8.4 面试话术模板
+> 我们 Agent 上线后主要遇到三类生产问题：
+第一是记忆错乱，多租户场景下召回没有加租户隔离，导致用户信息串了。解决方式是向量召回强制带 tenant_id + user_id 过滤条件，sessionId 和用户绑定，召回结果加相关性阈值过滤。
+第二是任务死循环，复杂任务规划没有步数限制，失败任务无限重试。解决方式是设置最大执行步数 15 步，失败重试上限 3 次加指数退避，重试耗尽降级跳过，工具返回结果统一格式化。
+第三是输出幻觉，知识库没召回时大模型自己编数据。解决方式是检索为空时明确告诉大模型“无相关信息禁止编造”，System Prompt 加强约束，关键业务参数用实体记忆锁定注入。
+这三个问题解决后，Agent 回答准确率从 72% 提升到 91%，生产故障基本清零。
 >
 

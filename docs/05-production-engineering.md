@@ -13,29 +13,29 @@ AI 接口高可用 3 个核心难点：
 
 三层防护架构：
 
-![三层防护](docs/pic/img_6.png)
+![三层防护](./docs/pic/img_6.png)
 
-### <font style="color:rgb(15, 17, 21);">1.1 限流</font>
-+ <font style="color:rgb(15, 17, 21);">QPS 限流 + 并发线程数限流双重防护</font>
-+ <font style="color:rgb(15, 17, 21);">匀速排队，不直接拒绝</font>
-+ <font style="color:rgb(15, 17, 21);">流式 SSE 接口用信号量控制并发连接数</font>
+### 1.1 限流
++ QPS 限流 + 并发线程数限流双重防护
++ 匀速排队，不直接拒绝
++ 流式 SSE 接口用信号量控制并发连接数
 
-### <font style="color:rgb(15, 17, 21);">1.2 降级</font>
-+ <font style="color:rgb(15, 17, 21);">慢调用比例降级</font>
-+ <font style="color:rgb(15, 17, 21);">优先返回缓存答案</font>
-+ <font style="color:rgb(15, 17, 21);">适用：早高峰、大模型抖动、配额不足</font>
+### 1.2 降级
++ 慢调用比例降级
++ 优先返回缓存答案
++ 适用：早高峰、大模型抖动、配额不足
 
-### <font style="color:rgb(15, 17, 21);">1.3 熔断</font>
-+ <font style="color:rgb(15, 17, 21);">异常比例熔断</font>
-+ <font style="color:rgb(15, 17, 21);">大模型 429、超时、配额耗尽、服务不可用都算异常</font>
-+ <font style="color:rgb(15, 17, 21);">状态流转：关闭 → 打开 → 半开 → 关闭</font>
+### 1.3 熔断
++ 异常比例熔断
++ 大模型 429、超时、配额耗尽、服务不可用都算异常
++ 状态流转：关闭 → 打开 → 半开 → 关闭
 
-### <font style="color:rgb(15, 17, 21);">1.4 三级兜底</font>
-| <font style="color:rgb(15, 17, 21);">层级</font> | <font style="color:rgb(15, 17, 21);">触发条件</font> | <font style="color:rgb(15, 17, 21);">策略</font> |
+### 1.4 三级兜底
+| 层级 | 触发条件 | 策略 |
 | --- | --- | --- |
-| <font style="color:rgb(15, 17, 21);">一级</font> | <font style="color:rgb(15, 17, 21);">限流触发</font> | <font style="color:rgb(15, 17, 21);">友好排队提示</font> |
-| <font style="color:rgb(15, 17, 21);">二级</font> | <font style="color:rgb(15, 17, 21);">降级/熔断</font> | <font style="color:rgb(15, 17, 21);">优先本地缓存答案</font> |
-| <font style="color:rgb(15, 17, 21);">三级</font> | <font style="color:rgb(15, 17, 21);">缓存未命中/故障持续</font> | <font style="color:rgb(15, 17, 21);">常见问题导航 + 人工客服入口</font> |
+| 一级 | 限流触发 | 友好排队提示 |
+| 二级 | 降级/熔断 | 优先本地缓存答案 |
+| 三级 | 缓存未命中/故障持续 | 常见问题导航 + 人工客服入口 |
 
 
 ### 1.5 Sentinel 限流降级熔断完整代码
@@ -49,7 +49,7 @@ AI 接口高可用 3 个核心难点：
 
 ```
 
-#### <font style="color:rgb(15, 17, 21);">限流规则配置</font>
+#### 限流规则配置
 ```java
 @PostConstruct
 public void initFlowRules() {
@@ -75,7 +75,7 @@ public void initFlowRules() {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">业务接口使用注解</font>
+#### 业务接口使用注解
 ```java
 @SentinelResource(
     value = "chat_interface",
@@ -105,7 +105,7 @@ return "当前系统繁忙，请稍后重试，您也可以查看常见问题文
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">流式 SSE 接口专属限流（信号量）</font>
+#### 流式 SSE 接口专属限流（信号量）
 ```java
 private final Semaphore sseSemaphore = new Semaphore(8);
 
@@ -121,44 +121,44 @@ return emitter;
 }
 ```
 
-### <font style="color:rgb(15, 17, 21);">1.6 新手必踩 6 坑</font>
-1. <font style="color:rgb(15, 17, 21);">只做 QPS 限流，不控并发数</font>
-2. <font style="color:rgb(15, 17, 21);">兜底方法写太复杂，自己也报错</font>
-3. <font style="color:rgb(15, 17, 21);">熔断时间设置不合理，反复雪崩</font>
-4. <font style="color:rgb(15, 17, 21);">所有接口共用一个资源名，限流混乱</font>
-5. <font style="color:rgb(15, 17, 21);">没有监控，出了问题全靠猜</font>
-6. <font style="color:rgb(15, 17, 21);">流式接口没做全链路限流，连接池爆了</font>
+### 1.6 新手必踩 6 坑
+1. 只做 QPS 限流，不控并发数
+2. 兜底方法写太复杂，自己也报错
+3. 熔断时间设置不合理，反复雪崩
+4. 所有接口共用一个资源名，限流混乱
+5. 没有监控，出了问题全靠猜
+6. 流式接口没做全链路限流，连接池爆了
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">2. SSE 上生产：断线重连 + 超时降级</font>
-<font style="color:rgb(15, 17, 21);">生产必死 4 个坑：</font>
+## 2. SSE 上生产：断线重连 + 超时降级
+生产必死 4 个坑：
 
-1. <font style="color:rgb(15, 17, 21);">断连即丢失进度</font>
-2. <font style="color:rgb(15, 17, 21);">无超时管控</font>
-3. <font style="color:rgb(15, 17, 21);">无异常兜底</font>
-4. <font style="color:rgb(15, 17, 21);">无资源隔离</font>
+1. 断连即丢失进度
+2. 无超时管控
+3. 无异常兜底
+4. 无资源隔离
 
-### <font style="color:rgb(15, 17, 21);">2.1 全链路检查清单</font>
-| <font style="color:rgb(15, 17, 21);">节点</font> | <font style="color:rgb(15, 17, 21);">检查项</font> | <font style="color:rgb(15, 17, 21);">配置值</font> |
+### 2.1 全链路检查清单
+| 节点 | 检查项 | 配置值 |
 | --- | --- | --- |
-| <font style="color:rgb(15, 17, 21);">大模型客户端</font> | <font style="color:rgb(15, 17, 21);">读超时</font> | <font style="color:rgb(15, 17, 21);">≥5 分钟</font> |
-| <font style="color:rgb(15, 17, 21);">大模型客户端</font> | <font style="color:rgb(15, 17, 21);">响应读取方式</font> | <font style="color:rgb(15, 17, 21);">逐行流读取，禁止 string()</font> |
-| <font style="color:rgb(15, 17, 21);">后端服务</font> | <font style="color:rgb(15, 17, 21);">SseEmitter 超时</font> | <font style="color:rgb(15, 17, 21);">≥5 分钟</font> |
-| <font style="color:rgb(15, 17, 21);">后端服务</font> | <font style="color:rgb(15, 17, 21);">线程池隔离</font> | <font style="color:rgb(15, 17, 21);">流式单独线程池</font> |
-| <font style="color:rgb(15, 17, 21);">后端服务</font> | <font style="color:rgb(15, 17, 21);">异常回调</font> | <font style="color:rgb(15, 17, 21);">onCompletion/onTimeout/onError 全注册</font> |
-| <font style="color:rgb(15, 17, 21);">后端服务</font> | <font style="color:rgb(15, 17, 21);">心跳保活</font> | <font style="color:rgb(15, 17, 21);">每 10 秒发注释心跳</font> |
-| <font style="color:rgb(15, 17, 21);">Nginx/网关</font> | <font style="color:rgb(15, 17, 21);">proxy_buffering</font> | <font style="color:rgb(15, 17, 21);">off</font> |
-| <font style="color:rgb(15, 17, 21);">Nginx/网关</font> | <font style="color:rgb(15, 17, 21);">X-Accel-Buffering</font> | <font style="color:rgb(15, 17, 21);">no</font> |
-| <font style="color:rgb(15, 17, 21);">Nginx/网关</font> | <font style="color:rgb(15, 17, 21);">proxy_read_timeout</font> | <font style="color:rgb(15, 17, 21);">≥5 分钟</font> |
-| <font style="color:rgb(15, 17, 21);">前端</font> | <font style="color:rgb(15, 17, 21);">断线重连</font> | <font style="color:rgb(15, 17, 21);">EventSource 自带 + offset 断点续传</font> |
+| 大模型客户端 | 读超时 | ≥5 分钟 |
+| 大模型客户端 | 响应读取方式 | 逐行流读取，禁止 string() |
+| 后端服务 | SseEmitter 超时 | ≥5 分钟 |
+| 后端服务 | 线程池隔离 | 流式单独线程池 |
+| 后端服务 | 异常回调 | onCompletion/onTimeout/onError 全注册 |
+| 后端服务 | 心跳保活 | 每 10 秒发注释心跳 |
+| Nginx/网关 | proxy_buffering | off |
+| Nginx/网关 | X-Accel-Buffering | no |
+| Nginx/网关 | proxy_read_timeout | ≥5 分钟 |
+| 前端 | 断线重连 | EventSource 自带 + offset 断点续传 |
 
 
-### <font style="color:rgb(15, 17, 21);">2.2 生产级能力</font>
-1. <font style="color:rgb(15, 17, 21);">断线重连 + 消息序号缓存</font>
-2. <font style="color:rgb(15, 17, 21);">线程池隔离 + 分级超时控制</font>
-3. <font style="color:rgb(15, 17, 21);">异常重试 + 分级降级兜底</font>
-4. <font style="color:rgb(15, 17, 21);">单用户并发限制</font>
+### 2.2 生产级能力
+1. 断线重连 + 消息序号缓存
+2. 线程池隔离 + 分级超时控制
+3. 异常重试 + 分级降级兜底
+4. 单用户并发限制
 
 ### 2.3 SSE 全链路代码案例
 #### 大模型客户端读超时配置（OkHttp）
@@ -170,7 +170,7 @@ OkHttpClient client = new OkHttpClient.Builder()
         .build();
 ```
 
-#### <font style="color:rgb(15, 17, 21);">流式读取（逐行，不要用 string()）</font>
+#### 流式读取（逐行，不要用 string()）
 ```java
 try (Response response = client.newCall(request).execute()) {
     BufferedReader reader = new BufferedReader(
@@ -186,7 +186,7 @@ try (Response response = client.newCall(request).execute()) {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">SSE 线程池隔离</font>
+#### SSE 线程池隔离
 ```java
 @Configuration
 public class SseThreadPoolConfig {
@@ -206,7 +206,7 @@ public class SseThreadPoolConfig {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">异常回调全注册</font>
+#### 异常回调全注册
 ```java
 SseEmitter emitter = new SseEmitter(300000L);
 emitter.onCompletion(() -> log.info("SSE连接正常结束"));
@@ -214,7 +214,7 @@ emitter.onTimeout(() -> { log.warn("SSE连接超时"); emitter.complete(); });
 emitter.onError(e -> { log.error("SSE连接异常", e); emitter.complete(); });
 ```
 
-#### <font style="color:rgb(15, 17, 21);">心跳保活</font>
+#### 心跳保活
 ```java
 ScheduledExecutorService heartbeat = Executors.newSingleThreadScheduledExecutor();
 heartbeat.scheduleAtFixedRate(() -> {
@@ -227,7 +227,7 @@ heartbeat.scheduleAtFixedRate(() -> {
 emitter.onCompletion(() -> heartbeat.shutdown());
 ```
 
-#### <font style="color:rgb(15, 17, 21);">Nginx 配置</font>
+#### Nginx 配置
 ```nginx
 location /api/chat/stream {
   proxy_pass http://backend;
@@ -242,8 +242,8 @@ location /api/chat/stream {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">前端断线重连与 Last-Event-ID</font>
-**<font style="color:rgb(15, 17, 21);">前端 EventSource 基础用法（浏览器自带断线重连）</font>**
+#### 前端断线重连与 Last-Event-ID
+**前端 EventSource 基础用法（浏览器自带断线重连）**
 
 ```html
 <script>
@@ -268,7 +268,7 @@ location /api/chat/stream {
 </script>
 ```
 
-**<font style="color:rgb(15, 17, 21);">后端读取 Last-Event-ID 断点续传</font>**
+**后端读取 Last-Event-ID 断点续传**
 
 ```java
 @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -314,7 +314,7 @@ public SseEmitter streamChat(
 }
 ```
 
-**<font style="color:rgb(15, 17, 21);">服务端发送消息必须设置事件 id</font>**
+**服务端发送消息必须设置事件 id**
 
 ```java
 public void pushMessage(String sessionId, String content, MessageType type) {
@@ -346,40 +346,40 @@ private ChatMessage cacheMessage(String sessionId, String content, MessageType t
 }
 ```
 
-**<font style="color:rgb(15, 17, 21);">注意事项</font>**
+**注意事项**
 
-1. <font style="color:rgb(15, 17, 21);">必须设置事件 id：只有 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">SseEmitter.event().id(...)</font><font style="color:rgb(15, 17, 21);"> 设置了 id，浏览器才会在重连时发送 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">Last-Event-ID</font><font style="color:rgb(15, 17, 21);"> 头。</font>
-2. <font style="color:rgb(15, 17, 21);">不要手动关闭 EventSource：在 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">onerror</font><font style="color:rgb(15, 17, 21);"> 中调用 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">evtSource.close()</font><font style="color:rgb(15, 17, 21);"> 会阻止浏览器自动重连。</font>
-3. <font style="color:rgb(15, 17, 21);">服务端必须缓存已发送消息：内存或 Redis，给每条消息分配递增序号。</font>
-4. <font style="color:rgb(15, 17, 21);">缓存容量必须设上限：防止长时间会话导致内存溢出。</font>
-5. <font style="color:rgb(15, 17, 21);">断点续传后继续生成：如果回答未生成完，服务端应继续生成剩余内容并推送新事件。</font>
+1. 必须设置事件 id：只有 SseEmitter.event().id(...) 设置了 id，浏览器才会在重连时发送 Last-Event-ID 头。
+2. 不要手动关闭 EventSource：在 onerror 中调用 evtSource.close() 会阻止浏览器自动重连。
+3. 服务端必须缓存已发送消息：内存或 Redis，给每条消息分配递增序号。
+4. 缓存容量必须设上限：防止长时间会话导致内存溢出。
+5. 断点续传后继续生成：如果回答未生成完，服务端应继续生成剩余内容并推送新事件。
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">3. Token 降本增效</font>
-<font style="color:rgb(15, 17, 21);">Token 成本构成：</font>
+## 3. Token 降本增效
+Token 成本构成：
 
-+ <font style="color:rgb(15, 17, 21);">输入 token 费用：用户问题、历史对话、检索文档</font>
-+ <font style="color:rgb(15, 17, 21);">输出 token 费用：大模型生成内容，通常比输入贵 2-3 倍</font>
++ 输入 token 费用：用户问题、历史对话、检索文档
++ 输出 token 费用：大模型生成内容，通常比输入贵 2-3 倍
 
-<font style="color:rgb(15, 17, 21);">企业知识库场景，输入 token 占 70% 以上。</font>
+企业知识库场景，输入 token 占 70% 以上。
 
-### <font style="color:rgb(15, 17, 21);">3.1 降本技巧</font>
-1. <font style="color:rgb(15, 17, 21);">问答缓存复用：降本 40%</font>
-2. <font style="color:rgb(15, 17, 21);">模型分级调用：降本 25%</font>
-3. <font style="color:rgb(15, 17, 21);">上下文精简与裁剪：降本 15%</font>
-4. <font style="color:rgb(15, 17, 21);">输出长度控制：降本 10%</font>
-5. <font style="color:rgb(15, 17, 21);">批量请求合并</font>
-6. <font style="color:rgb(15, 17, 21);">本地模型替代公网 API</font>
+### 3.1 降本技巧
+1. 问答缓存复用：降本 40%
+2. 模型分级调用：降本 25%
+3. 上下文精简与裁剪：降本 15%
+4. 输出长度控制：降本 10%
+5. 批量请求合并
+6. 本地模型替代公网 API
 
-### <font style="color:rgb(15, 17, 21);">3.2 Java 代码技巧</font>
-+ <font style="color:rgb(15, 17, 21);">对话历史自动裁剪，只保留最近 N 轮</font>
-+ <font style="color:rgb(15, 17, 21);">检索结果去重 + 截断</font>
-+ <font style="color:rgb(15, 17, 21);">Prompt 模板精简</font>
-+ <font style="color:rgb(15, 17, 21);">TopK 动态调整</font>
+### 3.2 Java 代码技巧
++ 对话历史自动裁剪，只保留最近 N 轮
++ 检索结果去重 + 截断
++ Prompt 模板精简
++ TopK 动态调整
 
-### <font style="color:rgb(15, 17, 21);">3.3 降本技巧代码案例</font>
-#### <font style="color:rgb(15, 17, 21);">技巧1：对话历史自动裁剪</font>
+### 3.3 降本技巧代码案例
+#### 技巧1：对话历史自动裁剪
 ```java
 public class ChatHistoryTrimmer {
     private static final int KEEP_ROUNDS = 5;
@@ -400,8 +400,8 @@ public class ChatHistoryTrimmer {
 > 实测数据：一个客服场景，保留全部历史平均单次输入 1800 Token，裁剪到最近 5 轮后降到 950 Token，直接省 47%。
 >
 
-#### <font style="color:rgb(15, 17, 21);">技巧2：检索结果去重 + 截断</font>
-<font style="color:rgb(15, 17, 21);">java</font>
+#### 技巧2：检索结果去重 + 截断
+java
 
 ```plain
 public class ChunkDeduplicator {
@@ -428,22 +428,22 @@ public class ChunkDeduplicator {
 }
 ```
 
-<font style="color:rgb(15, 17, 21);">实测效果：10 万文档知识库，去重前平均每次送 4 个片段共 1800 字，去重后剩 2.5 个片段约 1100 字，省 39% Token。</font>
+实测效果：10 万文档知识库，去重前平均每次送 4 个片段共 1800 字，去重后剩 2.5 个片段约 1100 字，省 39% Token。
 
-#### <font style="color:rgb(15, 17, 21);">技巧3：Prompt 模板精简</font>
-**<font style="color:rgb(15, 17, 21);">反面例子（约120Token）</font>**<font style="color:rgb(15, 17, 21);">：</font>
+#### 技巧3：Prompt 模板精简
+**反面例子（约120Token）**：
 
-> <font style="color:rgb(15, 17, 21);">你现在是一个非常专业的智能客服助手，你需要非常耐心地回答用户的问题，请注意，你只能根据提供的参考文档来回答，绝对不可以自己编造内容...</font>
+> 你现在是一个非常专业的智能客服助手，你需要非常耐心地回答用户的问题，请注意，你只能根据提供的参考文档来回答，绝对不可以自己编造内容...
 >
 
-**<font style="color:rgb(15, 17, 21);">精简版本（约25Token）</font>**<font style="color:rgb(15, 17, 21);">：</font>
+**精简版本（约25Token）**：
 
-> <font style="color:rgb(15, 17, 21);">你是企业智能客服，仅基于参考文档回答，无答案则回复：暂无相关信息。</font>
+> 你是企业智能客服，仅基于参考文档回答，无答案则回复：暂无相关信息。
 >
 
-<font style="color:rgb(15, 17, 21);">Token 少了 80%。</font>**<font style="color:rgb(15, 17, 21);">精简原则：去掉形容词副词、去掉重复约束、角色设定一句话、输出格式用最短指令。</font>**
+Token 少了 80%。**精简原则：去掉形容词副词、去掉重复约束、角色设定一句话、输出格式用最短指令。**
 
-#### <font style="color:rgb(15, 17, 21);">技巧4：TopK 动态调整</font>
+#### 技巧4：TopK 动态调整
 ```java
 public static int dynamicTopK(String question) {
 if (question.length() < 20 || isFactQuestion(question)) {
@@ -453,7 +453,7 @@ return 5; // 长问题、复杂推理类，TopK=5
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">技巧5：模型分级路由</font>
+#### 技巧5：模型分级路由
 ```java
 @Service
 public class ModelRouterService {
@@ -480,36 +480,36 @@ public class ModelRouterService {
 }
 ```
 
-> <font style="color:rgb(15, 17, 21);">实测效果：80% 的普通问题都能用小模型解决，整体成本再降 25%，用户体验完全没差别。</font>
+> 实测效果：80% 的普通问题都能用小模型解决，整体成本再降 25%，用户体验完全没差别。
 >
 
-### <font style="color:rgb(15, 17, 21);">3.4 优化项与单省比例</font>
-| <font style="color:rgb(15, 17, 21);">优化项</font> | <font style="color:rgb(15, 17, 21);">单省比例</font> |
+### 3.4 优化项与单省比例
+| 优化项 | 单省比例 |
 | --- | --- |
-| <font style="color:rgb(15, 17, 21);">对话历史裁剪</font> | <font style="color:rgb(15, 17, 21);">30%-50%</font> |
-| <font style="color:rgb(15, 17, 21);">检索去重截断</font> | <font style="color:rgb(15, 17, 21);">20%-40%</font> |
-| <font style="color:rgb(15, 17, 21);">Prompt 精简</font> | <font style="color:rgb(15, 17, 21);">50%-80%</font> |
-| <font style="color:rgb(15, 17, 21);">TopK 动态调整</font> | <font style="color:rgb(15, 17, 21);">10%-30%</font> |
+| 对话历史裁剪 | 30%-50% |
+| 检索去重截断 | 20%-40% |
+| Prompt 精简 | 50%-80% |
+| TopK 动态调整 | 10%-30% |
 
 
-<font style="color:rgb(15, 17, 21);">普通 RAG 场景叠加使用，输入 Token 整体下降 30%-40% 很轻松。</font>
+普通 RAG 场景叠加使用，输入 Token 整体下降 30%-40% 很轻松。
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">4. 性能优化</font>
-<font style="color:rgb(15, 17, 21);">通义千问性能优化 4 核心手段：</font>
+## 4. 性能优化
+通义千问性能优化 4 核心手段：
 
-1. <font style="color:rgb(15, 17, 21);">模型分级选型</font>
-2. <font style="color:rgb(15, 17, 21);">并发控制 + 请求排队</font>
-3. <font style="color:rgb(15, 17, 21);">缓存策略</font>
-4. <font style="color:rgb(15, 17, 21);">流式异步输出</font>
+1. 模型分级选型
+2. 并发控制 + 请求排队
+3. 缓存策略
+4. 流式异步输出
 
-### <font style="color:rgb(15, 17, 21);">4.1 必踩坑</font>
-+ <font style="color:rgb(15, 17, 21);">盲目调高并发数，触发平台限流</font>
-+ <font style="color:rgb(15, 17, 21);">全场景用高价大模型</font>
-+ <font style="color:rgb(15, 17, 21);">缓存没做失效机制</font>
-+ <font style="color:rgb(15, 17, 21);">队列长度设置过长</font>
-+ <font style="color:rgb(15, 17, 21);">所有请求共用线程池</font>
+### 4.1 必踩坑
++ 盲目调高并发数，触发平台限流
++ 全场景用高价大模型
++ 缓存没做失效机制
++ 队列长度设置过长
++ 所有请求共用线程池
 
 ### 4.2 并发控制代码案例（信号量 + 线程池）
 ```java
@@ -537,7 +537,7 @@ public class ModelConcurrencyConfig {
 }
 ```
 
-<font style="color:rgb(15, 17, 21);">调用时增加排队控制：</font>
+调用时增加排队控制：
 
 ```java
 public String chatWithConcurrencyControl(String question) {
@@ -555,7 +555,7 @@ try {
 }
 ```
 
-### <font style="color:rgb(15, 17, 21);">4.3 缓存策略代码案例（Caffeine + Redis 两级缓存）</font>
+### 4.3 缓存策略代码案例（Caffeine + Redis 两级缓存）
 ```java
 @Configuration
 public class ChatCacheConfig {
@@ -581,27 +581,27 @@ return answer;
 }
 ```
 
-> <font style="color:rgb(15, 17, 21);">实测效果：企业知识库场景高频问题占比超 60%，加缓存后大模型实际调用量降 70%，平均响应从 2-3 秒降到几百毫秒。</font>
+> 实测效果：企业知识库场景高频问题占比超 60%，加缓存后大模型实际调用量降 70%，平均响应从 2-3 秒降到几百毫秒。
 >
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">5. 监控告警</font>
-### <font style="color:rgb(15, 17, 21);">5.1 5 类核心指标</font>
-1. <font style="color:rgb(15, 17, 21);">调用指标：总调用量、各接口调用量、日活/周活</font>
-2. <font style="color:rgb(15, 17, 21);">性能指标：平均响应时长、P95/P99、首字延迟、流式总耗时</font>
-3. <font style="color:rgb(15, 17, 21);">错误指标：错误率、错误类型分布、超时次数、限流触发次数</font>
-4. <font style="color:rgb(15, 17, 21);">成本指标：总 Token 消耗、输入/输出占比、日均/月均费用</font>
-5. <font style="color:rgb(15, 17, 21);">效果指标：问答准确率、点赞/点踩率、badcase 数量、转人工率</font>
+## 5. 监控告警
+### 5.1 5 类核心指标
+1. 调用指标：总调用量、各接口调用量、日活/周活
+2. 性能指标：平均响应时长、P95/P99、首字延迟、流式总耗时
+3. 错误指标：错误率、错误类型分布、超时次数、限流触发次数
+4. 成本指标：总 Token 消耗、输入/输出占比、日均/月均费用
+5. 效果指标：问答准确率、点赞/点踩率、badcase 数量、转人工率
 
-### <font style="color:rgb(15, 17, 21);">5.2 4 条核心告警</font>
-1. <font style="color:rgb(15, 17, 21);">错误率告警：5 分钟内错误率超过 10%</font>
-2. <font style="color:rgb(15, 17, 21);">响应耗时告警：平均响应超过 5 秒或 P95 超过 10 秒</font>
-3. <font style="color:rgb(15, 17, 21);">成本告警：当日 Token 消耗超预算</font>
-4. <font style="color:rgb(15, 17, 21);">调用量异常告警：较昨日下降 80% 或增长 300%</font>
+### 5.2 4 条核心告警
+1. 错误率告警：5 分钟内错误率超过 10%
+2. 响应耗时告警：平均响应超过 5 秒或 P95 超过 10 秒
+3. 成本告警：当日 Token 消耗超预算
+4. 调用量异常告警：较昨日下降 80% 或增长 300%
 
-### <font style="color:rgb(15, 17, 21);">5.</font>3 监控埋点完整实现
-#### 自定义注解<font style="color:rgb(15, 17, 21);"> + AOP 切面，零侵入业务代码</font>
+### 5.3 监控埋点完整实现
+#### 自定义注解 + AOP 切面，零侵入业务代码
 ```java
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -612,7 +612,7 @@ public @interface AiMonitor {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">AOP 切面</font>
+#### AOP 切面
 ```java
 @Aspect
 @Component
@@ -642,7 +642,7 @@ public class AiMonitorAspect {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">指标采集 Service</font>
+#### 指标采集 Service
 ```java
 @Service
 public class MonitorService {
@@ -684,7 +684,7 @@ public class MonitorService {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">业务代码使用（零侵入）</font>
+#### 业务代码使用（零侵入）
 ```java
 @Service
 public class ChatService {
@@ -698,33 +698,33 @@ public class ChatService {
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">6. 生产 10 大坑</font>
-| <font style="color:rgb(15, 17, 21);">风险等级</font> | <font style="color:rgb(15, 17, 21);">坑点</font> | <font style="color:rgb(15, 17, 21);">核心风险</font> |
+## 6. 生产 10 大坑
+| 风险等级 | 坑点 | 核心风险 |
 | --- | --- | --- |
-| <font style="color:rgb(15, 17, 21);">致命</font> | <font style="color:rgb(15, 17, 21);">并发雪崩</font> | <font style="color:rgb(15, 17, 21);">服务整体不可用</font> |
-| <font style="color:rgb(15, 17, 21);">致命</font> | <font style="color:rgb(15, 17, 21);">敏感词漏检</font> | <font style="color:rgb(15, 17, 21);">合规处罚风险</font> |
-| <font style="color:rgb(15, 17, 21);">致命</font> | <font style="color:rgb(15, 17, 21);">会话串号</font> | <font style="color:rgb(15, 17, 21);">用户数据泄露</font> |
-| <font style="color:rgb(15, 17, 21);">致命</font> | <font style="color:rgb(15, 17, 21);">日志泄露敏感数据</font> | <font style="color:rgb(15, 17, 21);">数据安全事故</font> |
-| <font style="color:rgb(15, 17, 21);">严重</font> | <font style="color:rgb(15, 17, 21);">流式输出断流</font> | <font style="color:rgb(15, 17, 21);">用户体验崩塌</font> |
-| <font style="color:rgb(15, 17, 21);">严重</font> | <font style="color:rgb(15, 17, 21);">Token 超限截断</font> | <font style="color:rgb(15, 17, 21);">回答不完整</font> |
-| <font style="color:rgb(15, 17, 21);">严重</font> | <font style="color:rgb(15, 17, 21);">大模型超时</font> | <font style="color:rgb(15, 17, 21);">接口偶发失败</font> |
-| <font style="color:rgb(15, 17, 21);">严重</font> | <font style="color:rgb(15, 17, 21);">向量库内存泄漏</font> | <font style="color:rgb(15, 17, 21);">服务 OOM 崩溃</font> |
-| <font style="color:rgb(15, 17, 21);">一般</font> | <font style="color:rgb(15, 17, 21);">中文乱码</font> | <font style="color:rgb(15, 17, 21);">展示异常</font> |
-| <font style="color:rgb(15, 17, 21);">一般</font> | <font style="color:rgb(15, 17, 21);">依赖版本冲突</font> | <font style="color:rgb(15, 17, 21);">启动失败</font> |
+| 致命 | 并发雪崩 | 服务整体不可用 |
+| 致命 | 敏感词漏检 | 合规处罚风险 |
+| 致命 | 会话串号 | 用户数据泄露 |
+| 致命 | 日志泄露敏感数据 | 数据安全事故 |
+| 严重 | 流式输出断流 | 用户体验崩塌 |
+| 严重 | Token 超限截断 | 回答不完整 |
+| 严重 | 大模型超时 | 接口偶发失败 |
+| 严重 | 向量库内存泄漏 | 服务 OOM 崩溃 |
+| 一般 | 中文乱码 | 展示异常 |
+| 一般 | 依赖版本冲突 | 启动失败 |
 
 
-### <font style="color:rgb(15, 17, 21);">6.1 避坑核心原则</font>
-1. <font style="color:rgb(15, 17, 21);">边界防护：所有外部依赖都要做超时、重试、熔断、限流</font>
-2. <font style="color:rgb(15, 17, 21);">数据校验：所有输入输出都要校验、脱敏、权限判断</font>
-3. <font style="color:rgb(15, 17, 21);">可观测性：所有核心链路都要加监控、日志、告警</font>
+### 6.1 避坑核心原则
+1. 边界防护：所有外部依赖都要做超时、重试、熔断、限流
+2. 数据校验：所有输入输出都要校验、脱敏、权限判断
+3. 可观测性：所有核心链路都要加监控、日志、告警
 
-### <font style="color:rgb(15, 17, 21);">6.2 致命级坑案例</font>
-#### <font style="color:rgb(15, 17, 21);">坑1：并发雪崩</font>
-**现象**<font style="color:rgb(15, 17, 21);">：早高峰大量用户提问，服务直接卡死，所有接口响应变慢，大面积超时崩溃。</font>
+### 6.2 致命级坑案例
+#### 坑1：并发雪崩
+**现象**：早高峰大量用户提问，服务直接卡死，所有接口响应变慢，大面积超时崩溃。
 
-**根因**<font style="color:rgb(15, 17, 21);">：没有做并发控制，请求全部堆到大模型侧，GPU、带宽、线程池被打满，请求持续堆积形成雪崩。</font>
+**根因**：没有做并发控制，请求全部堆到大模型侧，GPU、带宽、线程池被打满，请求持续堆积形成雪崩。
 
-**解决方案**<font style="color:rgb(15, 17, 21);">：</font>
+**解决方案**：
 
 ```java
 // 接入层做并发限流
@@ -747,12 +747,12 @@ public ThreadPoolTaskExecutor aiModelExecutor() {
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">坑2：敏感词漏检</font>
-**<font style="color:rgb(15, 17, 21);">现象</font>**<font style="color:rgb(15, 17, 21);">：敏感词过滤已接入，仍有违规内容被输出。</font>
+#### 坑2：敏感词漏检
+**现象**：敏感词过滤已接入，仍有违规内容被输出。
 
-**<font style="color:rgb(15, 17, 21);">根因</font>**<font style="color:rgb(15, 17, 21);">：只做输入侧过滤，没做输出侧二次校验；词库不全，变体、谐音容易绕过。</font>
+**根因**：只做输入侧过滤，没做输出侧二次校验；词库不全，变体、谐音容易绕过。
 
-**<font style="color:rgb(15, 17, 21);">解决方案</font>**<font style="color:rgb(15, 17, 21);">：</font>
+**解决方案**：
 
 ```java
 // 输入输出双重过滤
@@ -772,12 +772,12 @@ return answer;
 }
 ```
 
-#### <font style="color:rgb(15, 17, 21);">坑3：会话串号</font>
-**<font style="color:rgb(15, 17, 21);">现象</font>**<font style="color:rgb(15, 17, 21);">：A 用户提问，返回了 B 用户的对话内容。</font>
+#### 坑3：会话串号
+**现象**：A 用户提问，返回了 B 用户的对话内容。
 
-**<font style="color:rgb(15, 17, 21);">根因</font>**<font style="color:rgb(15, 17, 21);">：sessionId 使用全局变量或缓存 key 重复；ThreadLocal 使用后未清理。</font>
+**根因**：sessionId 使用全局变量或缓存 key 重复；ThreadLocal 使用后未清理。
 
-**<font style="color:rgb(15, 17, 21);">解决方案</font>**<font style="color:rgb(15, 17, 21);">：</font>
+**解决方案**：
 
 ```java
 // sessionId 采用「用户ID + UUID」唯一标识
@@ -794,19 +794,19 @@ try {
 
 ---
 
-## <font style="color:rgb(15, 17, 21);">7. Agent 生产踩坑实录</font>
-### <font style="color:rgb(15, 17, 21);">7.1 记忆错乱</font>
-+ <font style="color:rgb(15, 17, 21);">现象：A 用户看到 B 用户政策，新会话记得上个用户隐私</font>
-+ <font style="color:rgb(15, 17, 21);">根因：向量召回没加租户隔离；sessionId 生成有 bug；没有相关性阈值过滤</font>
-+ <font style="color:rgb(15, 17, 21);">解决：向量召回强制带 </font><font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">tenant_id + user_id</font><font style="color:rgb(15, 17, 21);">；sessionId 和用户绑定；相关性阈值过滤</font>
+## 7. Agent 生产踩坑实录
+### 7.1 记忆错乱
++ 现象：A 用户看到 B 用户政策，新会话记得上个用户隐私
++ 根因：向量召回没加租户隔离；sessionId 生成有 bug；没有相关性阈值过滤
++ 解决：向量召回强制带 tenant_id + user_id；sessionId 和用户绑定；相关性阈值过滤
 
-### <font style="color:rgb(15, 17, 21);">7.2 任务死循环</font>
-+ <font style="color:rgb(15, 17, 21);">现象：Agent 卡住不动，token 疯狂消耗</font>
-+ <font style="color:rgb(15, 17, 21);">根因：没有最大执行步数；失败任务无限重试；工具返回格式不对</font>
-+ <font style="color:rgb(15, 17, 21);">解决：最大执行步数 15；失败重试上限 3 次 + 指数退避；工具结果格式化</font>
+### 7.2 任务死循环
++ 现象：Agent 卡住不动，token 疯狂消耗
++ 根因：没有最大执行步数；失败任务无限重试；工具返回格式不对
++ 解决：最大执行步数 15；失败重试上限 3 次 + 指数退避；工具结果格式化
 
-### <font style="color:rgb(15, 17, 21);">7.3 输出幻觉</font>
-+ <font style="color:rgb(15, 17, 21);">现象：Agent 编造不存在的数据和政策</font>
-+ <font style="color:rgb(15, 17, 21);">根因：没有检索结果相关性校验；Prompt 没有禁止编造；关键参数没锁定</font>
-+ <font style="color:rgb(15, 17, 21);">解决：空结果必拒答；Prompt 强约束；关键业务参数用实体记忆锁定</font>
+### 7.3 输出幻觉
++ 现象：Agent 编造不存在的数据和政策
++ 根因：没有检索结果相关性校验；Prompt 没有禁止编造；关键参数没锁定
++ 解决：空结果必拒答；Prompt 强约束；关键业务参数用实体记忆锁定
 
