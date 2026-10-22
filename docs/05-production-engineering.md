@@ -13,7 +13,7 @@ AI 接口高可用 3 个核心难点：
 
 三层防护架构：
 
-![三层防护](pic/img_6.png)
+![三层防护](docs/pic/img_6.png)
 
 ### <font style="color:rgb(15, 17, 21);">1.1 限流</font>
 + <font style="color:rgb(15, 17, 21);">QPS 限流 + 并发线程数限流双重防护</font>

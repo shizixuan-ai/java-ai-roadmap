@@ -18,8 +18,8 @@ RAG 知识库问答 = 开卷考试，先给 AI 发参考资料，要求它只能
 ## 2. RAG 全流程
 <!-- 这是一个文本绘图，源码为：flowchart TB -->
 
-![在线处理](pic/img_1.png)
-![离线处理](pic/img_2.png)
+![在线处理](docs/pic/img_1.png)
+![离线处理](docs/pic/img_2.png)
 
 <font style="color:rgb(15, 17, 21);">Java 后端逐行对应：</font>
 
@@ -48,7 +48,7 @@ RAG 知识库问答 = 开卷考试，先给 AI 发参考资料，要求它只能
 
 ### <font style="color:rgb(15, 17, 21);">3.2 企业级 RAG 离线预处理流程</font>
 <!-- 这是一个文本绘图，源码为：flowchart LR -->
-![文件解析](pic/img_3.png)
+![文件解析](docs/pic/img_3.png)
 
 <font style="color:rgb(15, 17, 21);">清洗是承上启下的核心环节，低成本、高收益。
 </font><font style="color:rgb(15, 17, 21);">70% 的 RAG 召回准确率低下问题，根源不在 Milvus、不在 Embedding 模型，而是原始文档混入大量无效噪声。</font>
@@ -346,7 +346,7 @@ public class ParentChildSplitter {
 
 
 ### <font style="color:rgb(15, 17, 21);">5.1 决策树</font>
-![决策树](pic/img_4.png)
+![决策树](docs/pic/img_4.png)
 
 > <font style="color:rgb(15, 17, 21);">避坑提醒：不要为了「技术先进」盲目上 Milvus。十万级数据用 Redis 完全够用，运维成本差一个数量级。</font>
 >
@@ -497,7 +497,7 @@ services:
 </font><font style="color:rgb(15, 17, 21);">真正靠谱方案：</font>**<font style="color:rgb(15, 17, 21);">Redis + MySQL 混合存储</font>**<font style="color:rgb(15, 17, 21);">。</font>
 
 ### <font style="color:rgb(15, 17, 21);">8.1 架构图</font>
-![查询 Redis 热会话](pic/img_5.png)
+![查询 Redis 热会话](docs/pic/img_5.png)
 
 ### <font style="color:rgb(15, 17, 21);">8.2 核心表</font>
 + <font style="color:rgb(15, 17, 21);background-color:rgb(235, 238, 242);">chat_session</font><font style="color:rgb(15, 17, 21);">：会话表</font>

@@ -65,7 +65,7 @@ flowchart TB
 
 <font style="color:rgb(15, 17, 21);">后续所有技术，都是为了补这三个缺陷。</font>
 
-![LLM 三大缺陷](pic/img.png)
+![LLM 三大缺陷](docs/pic/img.png)
 
 ---
 
