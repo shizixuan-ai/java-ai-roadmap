@@ -23,6 +23,7 @@ Function Call 是单步调用，Tool Call 是系统级能力编排。
 
 ### 1.2 Function Calling（机制层）
 #### 1.2.1 完整流程
+{% raw %}
 ```mermaid
 sequenceDiagram
     participant U as 用户
@@ -37,6 +38,7 @@ sequenceDiagram
     J->>LLM: 回传工具结果
     LLM-->>U: 生成自然语言回答
 ```
+{% endraw %}
 
 完整流程只有 4 步：
 

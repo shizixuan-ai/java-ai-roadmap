@@ -86,6 +86,7 @@ HarnessAgent 跑通三件事：工作区驱动的人格（AGENTS.md）、会话�
 ---
 
 ## 3. SpringBoot 对接通义千问核心流程
+{% raw %}
 ```mermaid
 sequenceDiagram
     participant U as 用户
@@ -99,6 +100,7 @@ sequenceDiagram
     S-->>C: 返回结果
     C-->>U: 展示答案
 ```
+{% endraw %}
 
 ### 3.1 核心依赖
 ```xml
